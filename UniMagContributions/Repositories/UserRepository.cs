@@ -31,27 +31,28 @@ namespace UniMagContributions.Repositories
             try
             {
                 var user = await _context.Users
-                    .Include(u => u.UserRoles)!
+                    .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
                     .FirstOrDefaultAsync(u => u.Username == username);
 
-                return user!;
+                return user;
             }
             catch (Exception)
             {
-                throw new Exception("Error getting user");
+                throw new Exception("Error getting userUS");
             }
         }
 
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
             try
             {
-                return _context.Users.FirstOrDefault(u => u.Email == email);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                return user;
             }
             catch (Exception)
             {
-                throw new Exception("Error getting user");
+                throw new Exception("Error getting userEM");
             }
         }
 

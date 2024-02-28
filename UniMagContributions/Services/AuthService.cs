@@ -35,13 +35,13 @@ namespace UniMagContributions.Services
         public string Register(RegisterDto registerDto)
         {
             // Get user by username
-            if (_userRepository.GetUserByUsernameAsync(registerDto.Username) != null)
+            if (_userRepository.GetUserByUsernameAsync(registerDto.Username).AsyncState != null)
             {
                 throw new ConflictException("Username already exists");
             }
 
             // Get user by email
-            if (_userRepository.GetUserByEmail(registerDto.Email) != null)
+            if (_userRepository.GetUserByEmailAsync(registerDto.Email).AsyncState != null)
             {
                 throw new ConflictException("Email already exists");
             }

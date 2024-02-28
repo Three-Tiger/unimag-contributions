@@ -6,7 +6,7 @@ using UniMagContributions.Models;
 namespace UniMagContributions.Controllers
 {
     [Authorize(Roles = "Student")]
-    [Route("api/[controller]")]
+    [Route("api/students")]
     [ApiController]
     public class StudentsController : ControllerBase
     {

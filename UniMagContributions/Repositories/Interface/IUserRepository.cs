@@ -1,4 +1,5 @@
-﻿using UniMagContributions.Models;
+﻿using System.Threading.Tasks;
+using UniMagContributions.Models;
 
 namespace UniMagContributions.Repositories.Interface
 {
@@ -6,7 +7,7 @@ namespace UniMagContributions.Repositories.Interface
     {
         void CreateUser(User user);
         Task<User> GetUserByUsernameAsync(string usernamme);
-        User GetUserByEmail(string email);
+		Task<User> GetUserByEmailAsync(string email);
         User GetUserById(Guid id);
         void UpdateUser(User user);
         void DeleteUser(User user);
