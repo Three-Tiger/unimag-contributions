@@ -39,7 +39,7 @@ namespace UniMagContributions.Repositories
             }
             catch (Exception)
             {
-                throw new Exception("Error getting userUS");
+                throw new Exception("Error getting user");
             }
         }
 
@@ -52,7 +52,7 @@ namespace UniMagContributions.Repositories
             }
             catch (Exception)
             {
-                throw new Exception("Error getting userEM");
+                throw new Exception("Error getting user");
             }
         }
 
