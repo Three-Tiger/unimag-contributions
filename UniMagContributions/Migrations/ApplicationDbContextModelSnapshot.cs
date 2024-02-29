@@ -39,22 +39,22 @@ namespace UniMagContributions.Migrations
                     b.HasData(
                         new
                         {
-                            RoleId = new Guid("04c787c1-c5b6-47fb-8181-50cfa8bb1bf2"),
+                            RoleId = new Guid("ae12aba6-8242-4756-a968-590cdcdf5877"),
                             Name = "Administrator"
                         },
                         new
                         {
-                            RoleId = new Guid("0008183e-11e1-41b0-b76d-0ba0262f308e"),
+                            RoleId = new Guid("c999f7c8-35d7-489a-b9c2-e9bf498d253e"),
                             Name = "Manager"
                         },
                         new
                         {
-                            RoleId = new Guid("688927b6-e7c1-4493-9bab-8ba5cd509d5c"),
+                            RoleId = new Guid("3eb0b668-36de-43e3-ae6e-4bf4cf4a4223"),
                             Name = "Coordinator"
                         },
                         new
                         {
-                            RoleId = new Guid("7955f776-47b4-480c-93c0-cf2cf2a95910"),
+                            RoleId = new Guid("83ed9ee7-ba06-4e83-8856-0be5e6d91648"),
                             Name = "Student"
                         });
                 });
@@ -99,60 +99,30 @@ namespace UniMagContributions.Migrations
                     b.Property<string>("ProfilePicture")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("UniMagContributions.Models.UserRole", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("UniMagContributions.Models.UserRole", b =>
+            modelBuilder.Entity("UniMagContributions.Models.User", b =>
                 {
                     b.HasOne("UniMagContributions.Models.Role", "Role")
-                        .WithMany("UserRoles")
+                        .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UniMagContributions.Models.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Role");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UniMagContributions.Models.Role", b =>
                 {
-                    b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("UniMagContributions.Models.User", b =>
-                {
-                    b.Navigation("UserRoles");
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

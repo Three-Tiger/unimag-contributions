@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -34,12 +35,6 @@ namespace UniMagContributions.Services
 
         public string Register(RegisterDto registerDto)
         {
-            // Get user by username
-            if (_userRepository.GetUserByUsernameAsync(registerDto.Username).AsyncState != null)
-            {
-                throw new ConflictException("Username already exists");
-            }
-
             // Get user by email
             if (_userRepository.GetUserByEmailAsync(registerDto.Email).AsyncState != null)
             {
@@ -56,13 +51,7 @@ namespace UniMagContributions.Services
             // Get role by name
             Role role = _roleRepository.GetRoleByName(ERole.Student.ToString()) ?? throw new Exception("Role not found");
 
-            // Set user role
-            user.UserRoles ??= new List<UserRole>();
-            user.UserRoles.Add(new UserRole
-            {
-                UserId = user.UserId,
-                RoleId = role.RoleId
-            });
+            user.RoleId = role.RoleId;
 
             // Save profile picture
             if (registerDto.ProfilePicture != null)
@@ -84,10 +73,8 @@ namespace UniMagContributions.Services
 
         public async Task<string> Login(LoginDto loginDto)
         {
-            // Get user by username
-            User user = await _userRepository.GetUserByUsernameAsync(loginDto.Username) ?? throw new AuthenticationException("Invalid Credentials!");
-
-            var userRoles = user.UserRoles.Select(ur => ur.Role.Name).ToList();
+            // Get user by email
+            User user = await _userRepository.GetUserByEmailAsync(loginDto.Email) ?? throw new AuthenticationException("Invalid Credentials!");;
 
             // Verify password
             var passwordHasher = new PasswordHasher<string>();
@@ -106,14 +93,10 @@ namespace UniMagContributions.Services
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new("userId", user.UserId.ToString()),
-            };
+				new(ClaimTypes.Role, user.Role.Name),
+			};
 
-            foreach (var role in userRoles)
-            {
-                claims.Add(new(ClaimTypes.Role, role));
-            }
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+			var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(tokenLifeTime),

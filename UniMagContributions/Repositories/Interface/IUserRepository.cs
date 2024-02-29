@@ -6,7 +6,6 @@ namespace UniMagContributions.Repositories.Interface
     public interface IUserRepository
     {
         void CreateUser(User user);
-        Task<User> GetUserByUsernameAsync(string usernamme);
 		Task<User> GetUserByEmailAsync(string email);
         User GetUserById(Guid id);
         void UpdateUser(User user);
