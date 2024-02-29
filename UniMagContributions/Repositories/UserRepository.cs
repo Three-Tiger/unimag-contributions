@@ -26,14 +26,13 @@ namespace UniMagContributions.Repositories
             }
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public User GetUserByEmail(string email)
         {
             try
             {
-                var user = await _context.Users
+                User user = _context.Users
                     .Include(u => u.Role)
-                    .FirstOrDefaultAsync(u => u.Email == email);
-
+                    .FirstOrDefault(u => u.Email == email);
                 return user;
             }
             catch (Exception)

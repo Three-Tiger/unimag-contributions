@@ -36,7 +36,8 @@ namespace UniMagContributions.Services
         public string Register(RegisterDto registerDto)
         {
             // Get user by email
-            if (_userRepository.GetUserByEmailAsync(registerDto.Email).AsyncState != null)
+            User user = _userRepository.GetUserByEmail(registerDto.Email);
+            if (user != null)
             {
                 throw new ConflictException("Email already exists");
             }
@@ -46,11 +47,10 @@ namespace UniMagContributions.Services
             registerDto.Password = passwordHasher.HashPassword(null, registerDto.Password);
 
             // Map registerDto to user
-            User user = _mapper.Map<User>(registerDto);
+            user = _mapper.Map<User>(registerDto);
 
             // Get role by name
             Role role = _roleRepository.GetRoleByName(ERole.Student.ToString()) ?? throw new Exception("Role not found");
-
             user.RoleId = role.RoleId;
 
             // Save profile picture
@@ -71,10 +71,10 @@ namespace UniMagContributions.Services
             return "Register success!";
         }
 
-        public async Task<string> Login(LoginDto loginDto)
+        public string Login(LoginDto loginDto)
         {
             // Get user by email
-            User user = await _userRepository.GetUserByEmailAsync(loginDto.Email) ?? throw new AuthenticationException("Invalid Credentials!");;
+            User user = _userRepository.GetUserByEmail(loginDto.Email) ?? throw new AuthenticationException("Invalid Credentials!");
 
             // Verify password
             var passwordHasher = new PasswordHasher<string>();
@@ -93,10 +93,10 @@ namespace UniMagContributions.Services
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new("userId", user.UserId.ToString()),
-				new(ClaimTypes.Role, user.Role.Name),
-			};
+                new(ClaimTypes.Role, user.Role.Name),
+            };
 
-			var tokenDescriptor = new SecurityTokenDescriptor
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(tokenLifeTime),

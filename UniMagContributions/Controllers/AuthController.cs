@@ -50,7 +50,7 @@ namespace UniMagContributions.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        public IActionResult Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace UniMagContributions.Controllers
             try
             {
                 AuthResponse authResponse = new();
-                authResponse.AccessToken = await _authService.Login(loginDto);
+                authResponse.AccessToken = _authService.Login(loginDto);
                 return Ok(authResponse);
             }
             catch (AuthenticationException e)
