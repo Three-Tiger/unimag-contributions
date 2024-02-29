@@ -10,10 +10,10 @@ namespace UniMagContributions.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid UserId { get; set; }
 
-        [StringLength(50)]
-        public string Username { get; set; }
+		[StringLength(255)]
+		public string Email { get; set; }
 
-        public string Password { get; set; }
+		public string Password { get; set; }
 
         [StringLength(50)]
         public string FirstName { get; set; }
@@ -23,9 +23,6 @@ namespace UniMagContributions.Models
 
         public DateTime DateOfBirth { get; set; }
 
-        [StringLength(255)]
-        public string Email { get; set; }
-
         [StringLength(10)]
         public string PhoneNumber { get; set; }
 
@@ -33,6 +30,9 @@ namespace UniMagContributions.Models
 
         public string? ProfilePicture { get; set; }
 
-        public virtual ICollection<UserRole>? UserRoles { get; set; }
+		public Guid RoleId { get; set; }
+
+		[ForeignKey("RoleId")]
+		public virtual Role? Role { get; set; }
     }
 }

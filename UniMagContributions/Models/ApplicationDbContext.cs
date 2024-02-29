@@ -17,12 +17,10 @@ namespace UniMagContributions.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<UserRole>().HasKey(o => new { o.UserId, o.RoleId });
 
             modelBuilder.Entity<Role>().HasData(
                 new Role { RoleId = Guid.NewGuid(), Name = ERole.Administrator.ToString() },
@@ -37,7 +35,7 @@ namespace UniMagContributions.Models
             var context = service.GetRequiredService<ApplicationDbContext>();
             var roleRepository = service.GetRequiredService<IRoleRepository>();
 
-            if (context.Users.Any(u => u.Username == "admin"))
+            if (context.Users.Any(u => u.Email == "admin@gmail.com"))
             {
                 return;
             }
@@ -53,7 +51,6 @@ namespace UniMagContributions.Models
             context.Users.Add(new User
             {
                 UserId = adminId,
-                Username = "admin",
                 Email = "admin@gmail.com",
                 Password = password,
                 FirstName = "Admin",
@@ -61,14 +58,7 @@ namespace UniMagContributions.Models
                 DateOfBirth = DateTime.Now,
                 Address = "Admin Address",
                 PhoneNumber = "1234567890",
-                UserRoles = new List<UserRole>
-                    {
-                        new UserRole
-                        {
-                            UserId = adminId,
-                            RoleId = adminRole.RoleId
-                        }
-                    }
+                RoleId = adminRole.RoleId
             });
             context.SaveChanges();
         }

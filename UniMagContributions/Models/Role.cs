@@ -9,6 +9,6 @@ namespace UniMagContributions.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid RoleId { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<UserRole>? UserRoles { get; set; }
+        public virtual ICollection<User>? Users { get; set; }
     }
 }

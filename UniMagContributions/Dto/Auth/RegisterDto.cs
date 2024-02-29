@@ -4,10 +4,11 @@ namespace UniMagContributions.Dto.Auth
 {
     public class RegisterDto
     {
-        [Required]
-        public string Username { get; set; }
+		[Required(ErrorMessage = "The email can not empty!")]
+		[EmailAddress(ErrorMessage = "Please enter a valid email address")]
+		public string Email { get; set; }
 
-        [Required]
+		[Required]
         public string Password { get; set; }
 
         [Required]
@@ -18,10 +19,6 @@ namespace UniMagContributions.Dto.Auth
 
         [Required]
         public string DateOfBirth { get; set; }
-
-        [Required(ErrorMessage = "The email can not empty!")]
-        [EmailAddress(ErrorMessage = "Please enter a valid email address")]
-        public string Email { get; set; }
 
         [Required(ErrorMessage = "The phone can not empty!")]
         [RegularExpression(@"^(\d+)?$", ErrorMessage = "The phone must be a number!")]
