@@ -1,4 +1,7 @@
 ﻿using UniMagContributions.Constraints;
+using UniMagContributions.Dto;
+using UniMagContributions.Models;
+using UniMagContributions.Repositories.Interface;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Services
@@ -6,10 +9,12 @@ namespace UniMagContributions.Services
     public class FileService : IFileService
     {
         private readonly IWebHostEnvironment environment;
+        private readonly IFileDetailRepository _fileDetailRepository;
 
-        public FileService(IWebHostEnvironment env)
+        public FileService(IWebHostEnvironment env, IFileDetailRepository fileDetailRepository)
         {
             environment = env;
+            _fileDetailRepository = fileDetailRepository;
         }
 
         public Tuple<int, string> SaveImage(IFormFile imageFile)
@@ -72,25 +77,25 @@ namespace UniMagContributions.Services
             }
         }
 
-        /*public async Task PostFileAsync(IFormFile fileData, FileType fileType)
+        public string PostFile(FileUploadDto fileUploadDto)
         {
             try
             {
                 var fileDetails = new FileDetails()
                 {
-                    ID = 0,
-                    FileName = fileData.FileName,
-                    FileType = fileType,
+                    FileName = fileUploadDto.FileDetails.FileName,
+                    FileType = fileUploadDto.FileType,
                 };
 
                 using (var stream = new MemoryStream())
                 {
-                    fileData.CopyTo(stream);
+					fileUploadDto.FileDetails.CopyTo(stream);
                     fileDetails.FileData = stream.ToArray();
                 }
 
-                var result = dbContextClass.FileDetails.Add(fileDetails);
-                await dbContextClass.SaveChangesAsync();
+                _fileDetailRepository.CreateFileDetail(fileDetails);
+
+                return "Upload File Successful!";
             }
             catch (Exception)
             {
@@ -98,15 +103,14 @@ namespace UniMagContributions.Services
             }
         }
 
-        public async Task PostMultiFileAsync(List<FileUploadModel> fileData)
+        public string PostMultiFile(List<FileUploadDto> fileData)
         {
             try
             {
-                foreach (FileUploadModel file in fileData)
+                foreach (FileUploadDto file in fileData)
                 {
                     var fileDetails = new FileDetails()
                     {
-                        ID = 0,
                         FileName = file.FileDetails.FileName,
                         FileType = file.FileType,
                     };
@@ -117,9 +121,9 @@ namespace UniMagContributions.Services
                         fileDetails.FileData = stream.ToArray();
                     }
 
-                    var result = dbContextClass.FileDetails.Add(fileDetails);
-                }
-                await dbContextClass.SaveChangesAsync();
+					_fileDetailRepository.CreateFileDetail(fileDetails);
+				}
+                return "Upload Multi File Successful!";
             }
             catch (Exception)
             {
@@ -127,18 +131,19 @@ namespace UniMagContributions.Services
             }
         }
 
-        public async Task DownloadFileById(int Id)
+        public string DownloadFileById(Guid Id)
         {
             try
             {
-                var file = dbContextClass.FileDetails.Where(x => x.ID == Id).FirstOrDefaultAsync();
+                var file = _fileDetailRepository.GetFileDetailById(Id);
 
-                var content = new System.IO.MemoryStream(file.Result.FileData);
+                var content = new System.IO.MemoryStream(file.FileData);
                 var path = Path.Combine(
-                   Directory.GetCurrentDirectory(), "FileDownloaded",
-                   file.Result.FileName);
+                   Directory.GetCurrentDirectory(), "FileDownloaded", file.FileName);
 
-                await CopyStream(content, path);
+                CopyStream(content, path);
+
+                return "Download Successful!";
             }
             catch (Exception)
             {
@@ -152,6 +157,6 @@ namespace UniMagContributions.Services
             {
                 await stream.CopyToAsync(fileStream);
             }
-        }*/
+        }
     }
 }

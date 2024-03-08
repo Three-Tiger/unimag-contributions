@@ -11,10 +11,10 @@ namespace UniMagContributions.Services.Interface
 
         bool DeleteImage(string imageFileName);
 
-        /*Task PostFileAsync(IFormFile fileData, FileType fileType);
+        string PostFile(FileUploadDto fileUploadDto);
 
-        Task PostMultiFileAsync(List<FileUpload> fileData);
+        string PostMultiFile(List<FileUploadDto> fileData);
 
-        Task DownloadFileById(int fileName);*/
+        string DownloadFileById(Guid id);
     }
 }

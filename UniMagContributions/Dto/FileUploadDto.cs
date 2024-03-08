@@ -2,9 +2,9 @@
 
 namespace UniMagContributions.Dto
 {
-    public class FileUpload
+    public class FileUploadDto
     {
         public IFormFile FileDetails { get; set; }
-        public FileType FileType { get; set; }
+        public EFileType FileType { get; set; }
     }
 }

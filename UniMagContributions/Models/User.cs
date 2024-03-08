@@ -32,7 +32,19 @@ namespace UniMagContributions.Models
 
 		public Guid RoleId { get; set; }
 
+		public Guid FacultyId { get; set; }
+
 		[ForeignKey("RoleId")]
 		public virtual Role? Role { get; set; }
-    }
+
+		[ForeignKey("FacultyId")]
+		public virtual Faculty? Faculty { get; set; }
+
+		public virtual ICollection<Contribution>? Contributions { get; set; }
+
+		public virtual ICollection<Feedback>? Feedbacks { get; set; }
+
+		public virtual ICollection<Notification>? Notifications { get; set; }
+
+	}
 }
