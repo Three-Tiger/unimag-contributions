@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 using UniMagContributions.Constraints;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IAnnualMagazineService, AnnualMagazineService>();
+builder.Services.AddScoped<IContributionService, ContributionService>();
 
 // Add repositories to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -32,31 +34,38 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IFileDetailRepository, FileDetailRepository>();
 builder.Services.AddScoped<IFacultyRepository, FacultyRepository>();
 builder.Services.AddScoped<IAnnualMagazineRepository, AnnualMagazineRepository>();
+builder.Services.AddScoped<IContributionRepository, ContributionRepository>();
 
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+		ValidIssuer = builder.Configuration["Jwt:Issuer"],
+		ValidAudience = builder.Configuration["Jwt:Audience"],
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+	};
 });
 
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.AddControllers()
+			.AddJsonOptions(options =>
+			{
+				options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+			});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -70,7 +79,7 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    await ApplicationDbContext.SeedAdminAsync(scope.ServiceProvider);
+	await ApplicationDbContext.SeedAdminAsync(scope.ServiceProvider);
 }
 
 app.Run();

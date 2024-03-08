@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using UniMagContributions.Dto.AnnualMagazine;
 using UniMagContributions.Dto.Auth;
+using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Dto.Faculty;
 using UniMagContributions.Models;
 
@@ -19,6 +20,10 @@ namespace UniMagContributions.Mapper
 			CreateMap<CreateAnnualMagazineDto, AnnualMagazine>();
 			CreateMap<UpdateAnnualMagazineDto, AnnualMagazine>();
 			CreateMap<AnnualMagazine, AnnualMagazineDto>();
+
+			CreateMap<CreateContributionDto, Contribution>();
+			CreateMap<UpdateContributionDto, Contribution>();
+			CreateMap<Contribution, ContributionDto>();
 		}
     }
 }

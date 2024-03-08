@@ -39,11 +39,23 @@ namespace UniMagContributions.Repositories
 			}
 		}
 
+		public List<Contribution> GetAllContribution()
+		{
+			try
+			{
+				return _context.Contributions.ToList();
+			}
+			catch (Exception)
+			{
+				throw new Exception("Error fetch Contribution");
+			}
+		}
+
 		public Contribution GetContributionById(Guid id)
 		{
 			try
 			{
-				return _context.Contributions.FirstOrDefault(u => u.ContributionId == id);
+				return _context.Contributions.Where(u => u.ContributionId == id).AsNoTracking().FirstOrDefault();
 			}
 			catch (Exception)
 			{
