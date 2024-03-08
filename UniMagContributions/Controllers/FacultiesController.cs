@@ -87,15 +87,10 @@ namespace UniMagContributions.Controllers
 
 				return Ok(faculty);
 			}
-			catch (ConflictException e)
+			catch (NotFoundException e)
 			{
 				response.Message = e.Message;
-				return StatusCode(StatusCodes.Status409Conflict, response);
-			}
-			catch (InvalidException e)
-			{
-				response.Message = e.Message;
-				return StatusCode(StatusCodes.Status400BadRequest, response);
+				return StatusCode(StatusCodes.Status404NotFound, response);
 			}
 			catch (Exception e)
 			{
@@ -105,24 +100,19 @@ namespace UniMagContributions.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public IActionResult Delete(Guid id, [FromBody] FacultyDto facultyDto)
+		public IActionResult Delete(Guid id)
 		{
 			ResponseDto response = new();
 			try
 			{
-				string faculty = _facultyService.DeleteFaculty(id);
+				response.Message = _facultyService.DeleteFaculty(id);
 
-				return Ok(faculty);
+				return Ok(response);
 			}
-			catch (ConflictException e)
+			catch (NotFoundException e)
 			{
 				response.Message = e.Message;
-				return StatusCode(StatusCodes.Status409Conflict, response);
-			}
-			catch (InvalidException e)
-			{
-				response.Message = e.Message;
-				return StatusCode(StatusCodes.Status400BadRequest, response);
+				return StatusCode(StatusCodes.Status404NotFound, response);
 			}
 			catch (Exception e)
 			{

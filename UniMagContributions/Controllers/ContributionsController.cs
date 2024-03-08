@@ -1,30 +1,31 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
-using UniMagContributions.Dto.AnnualMagazine;
+using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Dto.Faculty;
 using UniMagContributions.Exceptions;
+using UniMagContributions.Models;
 using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-	[Route("api/annualMagazines")]
+	[Route("api/contributions")]
 	[ApiController]
-	public class AnnualMagazinesController : ControllerBase
+	public class ContributionsController : ControllerBase
 	{
-		private readonly IAnnualMagazineService _annualMagazineService;
+		private readonly IContributionService _contributionService;
 
-		public AnnualMagazinesController(IAnnualMagazineService annualMagazineService)
+		public ContributionsController(IContributionService contributionService)
 		{
-			_annualMagazineService = annualMagazineService;
+			_contributionService = contributionService;
 		}
 
 		[HttpGet]
 		public IActionResult Get()
 		{
-			List<AnnualMagazineDto> annualMagazines = _annualMagazineService.GetAllAnnualMagazine();
-			return Ok(annualMagazines);
+			List<ContributionDto> faculties = _contributionService.GetAllContribution();
+			return Ok(faculties);
 		}
 
 		[HttpGet("{id}")]
@@ -33,8 +34,8 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				AnnualMagazineDto annualMagazineDto = _annualMagazineService.GetAnnualMagazineById(id);
-				return Ok(annualMagazineDto);
+				ContributionDto facultyDto = _contributionService.GetContributionById(id);
+				return Ok(facultyDto);
 			}
 			catch (NotFoundException e)
 			{
@@ -49,7 +50,7 @@ namespace UniMagContributions.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Post([FromBody] CreateAnnualMagazineDto createAnnualMagazineDto)
+		public IActionResult Post([FromBody] CreateContributionDto createContributionDto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -59,8 +60,8 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				AnnualMagazineDto annualMagazineDto = _annualMagazineService.AddAnnualMagazine(createAnnualMagazineDto);
-				return Ok(annualMagazineDto);
+				ContributionDto contributionDto = _contributionService.AddContribution(createContributionDto);
+				return Ok(contributionDto);
 			}
 			catch (ConflictException e)
 			{
@@ -75,7 +76,7 @@ namespace UniMagContributions.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult Put(Guid id, [FromBody] UpdateAnnualMagazineDto updateAMDto)
+		public IActionResult Put(Guid id, [FromBody] UpdateContributionDto updateContributionDto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -85,9 +86,9 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				AnnualMagazineDto faculty = _annualMagazineService.UpdateAnnualMagazine(id, updateAMDto);
+				ContributionDto contribution = _contributionService.UpdateContribution(id, updateContributionDto);
 
-				return Ok(faculty);
+				return Ok(contribution);
 			}
 			catch (NotFoundException e)
 			{
@@ -107,7 +108,7 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				response.Message = _annualMagazineService.DeleteAnnualMagazine(id);
+				response.Message = _contributionService.DeleteContribution(id);
 
 				return Ok(response);
 			}

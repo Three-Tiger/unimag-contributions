@@ -1,6 +1,7 @@
 ﻿namespace UniMagContributions.Dto.Contribution
 {
-	public class UpdateContributionDto
+	public class UpdateContributionDto : CreateContributionDto
 	{
+		public Guid ContributionId { get; set; }
 	}
 }
