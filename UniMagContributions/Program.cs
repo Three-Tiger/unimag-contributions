@@ -23,10 +23,15 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 // Add services to the container.
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IFacultyService, FacultyService>();
+builder.Services.AddScoped<IAnnualMagazineService, AnnualMagazineService>();
 
 // Add repositories to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IFileDetailRepository, FileDetailRepository>();
+builder.Services.AddScoped<IFacultyRepository, FacultyRepository>();
+builder.Services.AddScoped<IAnnualMagazineRepository, AnnualMagazineRepository>();
 
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
