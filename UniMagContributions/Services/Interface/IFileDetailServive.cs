@@ -11,6 +11,6 @@ namespace UniMagContributions.Services.Interface
 		FileDetailDto GetFileDetailById(Guid id);
 		List<FileDetailDto> GetAllFileDetail();
 		string DownloadFileById(Guid id);
-		string DownloadFileByContributionId(Guid ContributionId);
+		/*string DownloadFileByContributionId(Guid ContributionId);*/
 	}
 }
