@@ -16,6 +16,6 @@ namespace UniMagContributions.Services.Interface
 
         string DownloadFileById(FileDetails fileDetails);
 
-		string DownloadFileByContributionId(Guid ContributionId);
+		/*string DownloadFileByContributionId(Guid ContributionId);*/
 	}
 }

@@ -1,31 +1,30 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using UniMagContributions.Dto;
 using UniMagContributions.Dto.Contribution;
-using UniMagContributions.Dto.Faculty;
+using UniMagContributions.Dto;
+using UniMagContributions.Dto.Feedback;
 using UniMagContributions.Exceptions;
-using UniMagContributions.Models;
 using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-	[Route("api/contributions")]
+	[Route("api/feedbacks")]
 	[ApiController]
-	public class ContributionsController : ControllerBase
+	public class FeedbacksController : ControllerBase
 	{
-		private readonly IContributionService _contributionService;
+		private readonly IFeedbackService _feedbackService;
 
-		public ContributionsController(IContributionService contributionService)
+		public FeedbacksController(IFeedbackService feedbackService)
 		{
-			_contributionService = contributionService;
+			_feedbackService = feedbackService;
 		}
 
-		[HttpGet]
-		public IActionResult Get()
+		[HttpGet("/api/getAllFeedbacks/{id}")]
+		public IActionResult GetAllFeedbacks(Guid id)
 		{
-			List<ContributionDto> contribution = _contributionService.GetAllContribution();
-			return Ok(contribution);
+			List<FeedbackDto> feedbacksList = _feedbackService.GetAllFeedback(id);
+			return Ok(feedbacksList);
 		}
 
 		[HttpGet("{id}")]
@@ -34,7 +33,7 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				ContributionDto facultyDto = _contributionService.GetContributionById(id);
+				FeedbackDto facultyDto = _feedbackService.GetFeedbackById(id);
 				return Ok(facultyDto);
 			}
 			catch (NotFoundException e)
@@ -50,7 +49,7 @@ namespace UniMagContributions.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Post([FromBody] CreateContributionDto createContributionDto)
+		public IActionResult Post([FromBody] CreateFeedbackDto createFeedbackDto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -60,8 +59,8 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				ContributionDto contributionDto = _contributionService.AddContribution(createContributionDto);
-				return Ok(contributionDto);
+				FeedbackDto feedbackDto = _feedbackService.AddFeedback(createFeedbackDto);
+				return Ok(feedbackDto);
 			}
 			catch (ConflictException e)
 			{
@@ -76,7 +75,7 @@ namespace UniMagContributions.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult Put(Guid id, [FromBody] UpdateContributionDto updateContributionDto)
+		public IActionResult Put(Guid id, [FromBody] UpdateFeedbackDto updateFeedbackDto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -86,9 +85,9 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				ContributionDto contribution = _contributionService.UpdateContribution(id, updateContributionDto);
+				FeedbackDto feedback = _feedbackService.UpdateFeedback(id, updateFeedbackDto);
 
-				return Ok(contribution);
+				return Ok(feedback);
 			}
 			catch (NotFoundException e)
 			{
@@ -108,7 +107,7 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				response.Message = _contributionService.DeleteContribution(id);
+				response.Message = _feedbackService.DeleteFeedback(id);
 
 				return Ok(response);
 			}

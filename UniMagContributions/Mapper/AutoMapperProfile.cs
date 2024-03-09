@@ -3,6 +3,7 @@ using UniMagContributions.Dto.AnnualMagazine;
 using UniMagContributions.Dto.Auth;
 using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Dto.Faculty;
+using UniMagContributions.Dto.Feedback;
 using UniMagContributions.Models;
 
 namespace UniMagContributions.Mapper
@@ -24,6 +25,10 @@ namespace UniMagContributions.Mapper
 			CreateMap<CreateContributionDto, Contribution>();
 			CreateMap<UpdateContributionDto, Contribution>();
 			CreateMap<Contribution, ContributionDto>();
+
+			CreateMap<CreateFeedbackDto, Feedback>();
+			CreateMap<UpdateFeedbackDto, Feedback>();
+			CreateMap<Feedback, FeedbackDto>();
 		}
     }
 }
