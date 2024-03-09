@@ -1,5 +1,5 @@
 ﻿using UniMagContributions.Constraints;
-using UniMagContributions.Dto;
+using UniMagContributions.Dto.FileDetails;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories.Interface;
 using UniMagContributions.Services.Interface;
@@ -77,25 +77,19 @@ namespace UniMagContributions.Services
             }
         }
 
-        public string PostFile(FileUploadDto fileUploadDto)
+        public byte[] PostFile(FileUploadDto fileUploadDto)
         {
             try
             {
-                var fileDetails = new FileDetails()
-                {
-                    FileName = fileUploadDto.FileDetails.FileName,
-                    FileType = fileUploadDto.FileType,
-                };
+                byte[] bytes = null;
 
                 using (var stream = new MemoryStream())
                 {
 					fileUploadDto.FileDetails.CopyTo(stream);
-                    fileDetails.FileData = stream.ToArray();
+                    bytes = stream.ToArray();
                 }
 
-                _fileDetailRepository.CreateFileDetail(fileDetails);
-
-                return "Upload File Successful!";
+                return bytes;
             }
             catch (Exception)
             {
@@ -103,43 +97,14 @@ namespace UniMagContributions.Services
             }
         }
 
-        public string PostMultiFile(List<FileUploadDto> fileData)
+        public string DownloadFileById(FileDetails fileDetails)
         {
-            try
+			/*try
             {
-                foreach (FileUploadDto file in fileData)
-                {
-                    var fileDetails = new FileDetails()
-                    {
-                        FileName = file.FileDetails.FileName,
-                        FileType = file.FileType,
-                    };
+                var content = new System.IO.MemoryStream(fileDetails.FileData);
 
-                    using (var stream = new MemoryStream())
-                    {
-                        file.FileDetails.CopyTo(stream);
-                        fileDetails.FileData = stream.ToArray();
-                    }
-
-					_fileDetailRepository.CreateFileDetail(fileDetails);
-				}
-                return "Upload Multi File Successful!";
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public string DownloadFileById(Guid Id)
-        {
-            try
-            {
-                var file = _fileDetailRepository.GetFileDetailById(Id);
-
-                var content = new System.IO.MemoryStream(file.FileData);
                 var path = Path.Combine(
-                   Directory.GetCurrentDirectory(), "FileDownloaded", file.FileName);
+                   Directory.GetCurrentDirectory(), "FileDownloaded", fileDetails.FileName);
 
                 CopyStream(content, path);
 
@@ -148,8 +113,35 @@ namespace UniMagContributions.Services
             catch (Exception)
             {
                 throw;
-            }
-        }
+            }*/
+
+			try
+			{
+				var content = new System.IO.MemoryStream(fileDetails.FileData);
+
+				// Specify the directory where you want to save the file
+				string downloadDirectory = @"C:\Downloads"; // Change this to your desired directory
+
+				// Ensure the download directory exists; if not, create it
+				if (!Directory.Exists(downloadDirectory))
+				{
+					Directory.CreateDirectory(downloadDirectory);
+				}
+
+				// Combine the download directory path with the file name
+				var path = Path.Combine(downloadDirectory, fileDetails.FileName);
+
+				// Copy the file stream to the specified path
+				CopyStream(content, path);
+
+				return "Download Successful!";
+			}
+			catch (Exception ex)
+			{
+				// Handle exceptions appropriately
+				throw new Exception("Failed to download file.", ex);
+			}
+		}
 
         public async Task CopyStream(Stream stream, string downloadPath)
         {

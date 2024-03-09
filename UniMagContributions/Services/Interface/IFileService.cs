@@ -1,5 +1,6 @@
 ﻿using UniMagContributions.Constraints;
-using UniMagContributions.Dto;
+using UniMagContributions.Dto.FileDetails;
+using UniMagContributions.Models;
 
 namespace UniMagContributions.Services.Interface
 {
@@ -11,10 +12,10 @@ namespace UniMagContributions.Services.Interface
 
         bool DeleteImage(string imageFileName);
 
-        string PostFile(FileUploadDto fileUploadDto);
+        byte[] PostFile(FileUploadDto fileUploadDto);
 
-        string PostMultiFile(List<FileUploadDto> fileData);
+        string DownloadFileById(FileDetails fileDetails);
 
-        string DownloadFileById(Guid id);
-    }
+		string DownloadFileByContributionId(Guid ContributionId);
+	}
 }
