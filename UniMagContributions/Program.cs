@@ -27,6 +27,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IAnnualMagazineService, AnnualMagazineService>();
 builder.Services.AddScoped<IContributionService, ContributionService>();
+builder.Services.AddScoped<IFileDetailServive, FileDetailService>();
 
 // Add repositories to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();

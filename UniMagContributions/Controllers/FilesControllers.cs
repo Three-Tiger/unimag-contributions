@@ -1,84 +1,85 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
+using UniMagContributions.Dto.Faculty;
+using UniMagContributions.Dto.FileDetails;
+using UniMagContributions.Exceptions;
 using UniMagContributions.Models;
+using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-	[Route("api/file-details")]
+    [Route("api/file-details")]
 	[ApiController]
 	public class FilesController : ControllerBase
 	{
-		private readonly IFileService _uploadService;
+		private readonly IFileDetailServive _fileDetailServive;
 
-		public FilesController(IFileService uploadService)
+		public FilesController(IFileDetailServive fileDetailServive)
 		{
-			_uploadService = uploadService;
+			_fileDetailServive = fileDetailServive;
 		}
 
-		/// <summary>
-		/// Single File Upload
-		/// </summary>
-		/// <param name="file"></param>
-		/// <returns></returns>
-		[HttpPost("PostSingleFile")]
-		public async Task<ActionResult> PostSingleFile([FromForm] FileUploadDto fileUploadDto)
+		[HttpPost]
+		public IActionResult Post([FromForm] CreateaFileDetailsDto createaFileDetailsDto)
 		{
-			if (fileUploadDto == null)
+			if (!ModelState.IsValid)
 			{
-				return BadRequest();
+				return BadRequest(ModelState);
 			}
 
 			ResponseDto response = new();
 			try
 			{
-				response.Message = _uploadService.PostFile(fileUploadDto);
+				response.Message = _fileDetailServive.AddFileDetail(createaFileDetailsDto);
 				return Ok(response);
 			}
-			catch (Exception)
+			catch (ConflictException e)
 			{
-				throw;
+				response.Message = e.Message;
+				return StatusCode(StatusCodes.Status409Conflict, response);
+			}
+			catch (Exception e)
+			{
+				response.Message = e.Message;
+				return StatusCode(StatusCodes.Status500InternalServerError, response);
 			}
 		}
 
-		/// <summary>
-		/// Multiple File Upload
-		/// </summary>
-		/// <param name="file"></param>
-		/// <returns></returns>
-		[HttpPost("PostMultipleFile")]
-		public async Task<ActionResult> PostMultipleFile([FromForm] List<FileUploadDto> fileDetails)
+		[HttpPost("multipleFile")]
+		public IActionResult Post([FromForm] List<CreateaFileDetailsDto> fileDetails)
 		{
 			if (fileDetails == null)
 			{
-				return BadRequest();
+				return BadRequest(ModelState);
 			}
 
 			ResponseDto response = new();
 			try
 			{
-				response.Message = _uploadService.PostMultiFile(fileDetails);
-				return Ok();
+				response.Message = _fileDetailServive.AddMultipleFileDetail(fileDetails);
+				return Ok(response);
 			}
-			catch (Exception)
+			catch (ConflictException e)
 			{
-				throw;
+				response.Message = e.Message;
+				return StatusCode(StatusCodes.Status409Conflict, response);
+			}
+			catch (Exception e)
+			{
+				response.Message = e.Message;
+				return StatusCode(StatusCodes.Status500InternalServerError, response);
 			}
 		}
 
-		/// <summary>
-		/// Download File
-		/// </summary>
-		/// <param name="file"></param>
-		/// <returns></returns>
-		[HttpGet("DownloadFile")]
-		public async Task<ActionResult> DownloadFile(Guid id)
+		[HttpGet("{id}/download")]
+		public IActionResult DownloadFile(Guid id)
 		{
+			ResponseDto response = new();
 			try
 			{
-				ResponseDto response = new();
-				response.Message = _uploadService.DownloadFileById(id);
-				return Ok();
+				response.Message = _fileDetailServive.DownloadFileById(id);
+				return Ok(response);
 			}
 			catch (Exception)
 			{

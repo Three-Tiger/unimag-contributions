@@ -52,5 +52,10 @@ namespace UniMagContributions.Repositories
 		{
 			throw new NotImplementedException();
 		}
+
+		FileDetails IFileDetailRepository.GetFileDetailByName(string name)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
