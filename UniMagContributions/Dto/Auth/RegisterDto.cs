@@ -30,5 +30,8 @@ namespace UniMagContributions.Dto.Auth
         public string Address { get; set; }
 
         public IFormFile? ProfilePicture { get; set; }
+
+        [Required]
+        public Guid FacultyId { get; set; }
     }
 }

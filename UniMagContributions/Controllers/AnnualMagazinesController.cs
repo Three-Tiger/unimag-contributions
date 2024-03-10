@@ -9,7 +9,7 @@ using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-	[Route("api/annualMagazines")]
+	[Route("api/annual-magazines")]
 	[ApiController]
 	public class AnnualMagazinesController : ControllerBase
 	{
@@ -94,6 +94,11 @@ namespace UniMagContributions.Controllers
 				response.Message = e.Message;
 				return StatusCode(StatusCodes.Status404NotFound, response);
 			}
+			catch (ConflictException e)
+			{
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status409Conflict, response);
+            }
 			catch (Exception e)
 			{
 				response.Message = e.Message;

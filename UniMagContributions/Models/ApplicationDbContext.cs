@@ -42,25 +42,29 @@ namespace UniMagContributions.Models
                 .HasForeignKey(u => u.ContributionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<Notification>()
-				.HasOne(u => u.User)
-				.WithMany(fb => fb.Notifications)
-				.HasForeignKey(u => u.UserId)
-				.OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Notification>()
+                .HasOne(u => u.User)
+                .WithMany(fb => fb.Notifications)
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<Notification>()
-				.HasOne(u => u.Contribution)
-				.WithMany(fb => fb.Notifications)
-				.HasForeignKey(u => u.ContributionId)
-				.OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Notification>()
+                .HasOne(u => u.Contribution)
+                .WithMany(fb => fb.Notifications)
+                .HasForeignKey(u => u.ContributionId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<Role>().HasData(
+            modelBuilder.Entity<Role>().HasData(
                 new Role { RoleId = Guid.NewGuid(), Name = ERole.Administrator.ToString() },
                 new Role { RoleId = Guid.NewGuid(), Name = ERole.Manager.ToString() },
                 new Role { RoleId = Guid.NewGuid(), Name = ERole.Coordinator.ToString() },
                 new Role { RoleId = Guid.NewGuid(), Name = ERole.Student.ToString() }
-            );			
-		}
+            );
+
+            modelBuilder.Entity<Faculty>().HasData(
+                new Faculty { FacultyId = new Guid("52B9EF2E-0E06-4443-8EC7-B008A0FFD30B"), Name = "Admin", Description = "Admin Description" }
+            );
+        }
 
         public static async Task SeedAdminAsync(IServiceProvider service)
         {

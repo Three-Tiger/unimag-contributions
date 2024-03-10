@@ -1,4 +1,5 @@
-﻿using UniMagContributions.Constraints;
+﻿using Microsoft.AspNetCore.Mvc;
+using UniMagContributions.Constraints;
 using UniMagContributions.Dto.FileDetails;
 using UniMagContributions.Models;
 
@@ -6,16 +7,14 @@ namespace UniMagContributions.Services.Interface
 {
     public interface IFileService
     {
-        Tuple<int, string> SaveImage(IFormFile imageFile);
+        Tuple<int, string> SaveFile(IFormFile imageFile, EFolder folderName);
 
-        string getFilePath(string fileName);
-
-        bool DeleteImage(string imageFileName);
+        bool DeleteFile(string imageFileName, EFolder folderName);
 
         byte[] PostFile(FileUploadDto fileUploadDto);
 
-        string DownloadFileById(FileDetails fileDetails);
+        FileContentResult DownloadFileById(FileDetails fileDetails, EFolder folderName);
 
-		string DownloadFileByContributionId(Guid ContributionId);
+        FileContentResult DownloadMultipleFile(List<FileDetails> fileDetails, EFolder folderName);
 	}
 }

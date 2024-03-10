@@ -46,7 +46,7 @@ namespace UniMagContributions.Controllers
 			}
 		}
 
-		[HttpPost("multipleFile")]
+		[HttpPost("multiple-file")]
 		public IActionResult Post([FromForm] List<CreateaFileDetailsDto> fileDetails)
 		{
 			if (fileDetails == null)
@@ -78,13 +78,30 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				response.Message = _fileDetailServive.DownloadFileById(id);
-				return Ok(response);
+                FileContentResult result = _fileDetailServive.DownloadFileById(id);
+				return result;
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				throw;
+				response.Message = e.Message;
+				return StatusCode(StatusCodes.Status500InternalServerError, response);
 			}
 		}
-	}
+
+        [HttpGet("{contributionId}/download-multiple")]
+        public IActionResult DownloadMultipleFile(Guid contributionId)
+        {
+            ResponseDto response = new();
+            try
+            {
+                FileContentResult result = _fileDetailServive.DownloadMultipleFile(contributionId);
+                return result;
+            }
+            catch (Exception e)
+            {
+				response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+    }
 }

@@ -10,5 +10,6 @@ namespace UniMagContributions.Repositories.Interface
 		List<AnnualMagazine> GetAllAnnualMagazine();
 		void UpdateAnnualMagazine(AnnualMagazine annualMagazine);
 		void DeleteAnnualMagazine(AnnualMagazine annualMagazine);
+		bool CheckUpdateAcademicYear(string academicYear, Guid id);
 	}
 }

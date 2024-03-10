@@ -56,13 +56,13 @@ namespace UniMagContributions.Services
             // Save profile picture
             if (registerDto.ProfilePicture != null)
             {
-                var result = _fileService.SaveImage(registerDto.ProfilePicture);
+                var result = _fileService.SaveFile(registerDto.ProfilePicture, EFolder.ProfilePicture);
                 // if it is not right format
                 if (result.Item1 == 0)
                 {
                     throw new InvalidException(result.Item2);
                 }
-                user.ProfilePicture = _fileService.getFilePath(result.Item2);
+                user.ProfilePicture = result.Item2;
             }
 
             // Create user
@@ -71,7 +71,7 @@ namespace UniMagContributions.Services
             return "Register success!";
         }
 
-        public string Login(LoginDto loginDto)
+        public AuthResponse Login(LoginDto loginDto)
         {
             // Get user by email
             User user = _userRepository.GetUserByEmail(loginDto.Email) ?? throw new AuthenticationException("Invalid Credentials!");
@@ -106,7 +106,10 @@ namespace UniMagContributions.Services
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            string accessToken = tokenHandler.WriteToken(token);
+            string role = user.Role.Name;
+
+            return new AuthResponse { AccessToken = accessToken, Role = role };
         }
     }
 }

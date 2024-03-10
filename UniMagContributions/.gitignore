@@ -271,5 +271,10 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/
 
+# wwwroot directory
+wwwroot/ContributionFile
+wwwroot/ProfilePicture
+wwwroot/ContributionImage
+
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
 1

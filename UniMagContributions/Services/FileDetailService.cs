@@ -1,4 +1,7 @@
-﻿using UniMagContributions.Dto.FileDetails;
+﻿using Microsoft.AspNetCore.Mvc;
+using UniMagContributions.Constraints;
+using UniMagContributions.Dto.FileDetails;
+using UniMagContributions.Exceptions;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories.Interface;
 using UniMagContributions.Services.Interface;
@@ -7,23 +10,29 @@ namespace UniMagContributions.Services
 {
 	public class FileDetailService : IFileDetailServive
 	{
-		private readonly IFileService _uploadService;
+		private readonly IFileService _fileService;
 		private readonly IFileDetailRepository _fileDetailRepository;
 
 		public FileDetailService(IFileService uploadService, IFileDetailRepository fileDetailRepository)
 		{
-			_uploadService = uploadService;
+			_fileService = uploadService;
 			_fileDetailRepository = fileDetailRepository;
 		}
 
 		public string AddFileDetail(CreateaFileDetailsDto fileDetailsDto)
 		{
-			byte[] upload = _uploadService.PostFile(fileDetailsDto.FileUpload);
+			var result = _fileService.SaveFile(fileDetailsDto.FileUpload.FileDetails, EFolder.ContributionFile);
 
-			var fileDetails = new FileDetails()
+            // if it is not right format
+            if (result.Item1 == 0)
+            {
+                throw new InvalidException(result.Item2);
+            }
+
+            var fileDetails = new FileDetails()
 			{
 				FileName = fileDetailsDto.FileUpload.FileDetails.FileName,
-				FileData = upload,
+				FilePath = result.Item2,
 				FileType = fileDetailsDto.FileUpload.FileType,
 				ContributionId = fileDetailsDto.ContributionId,
 			};
@@ -33,11 +42,10 @@ namespace UniMagContributions.Services
 			return "Upload Success!";
 		}
 
-		public string DownloadFileById(Guid id)
+		public FileContentResult DownloadFileById(Guid id)
 		{
 			FileDetails fileDetails = _fileDetailRepository.GetFileDetailById(id);
-
-			return _uploadService.DownloadFileById(fileDetails); ;
+			return _fileService.DownloadFileById(fileDetails, EFolder.ContributionFile);
 		}
 
 		public string DeleteFileDetail(Guid id)
@@ -66,12 +74,12 @@ namespace UniMagContributions.Services
 			{
 				foreach (var fileDetailsDto in FileDetailDto)
 				{
-					byte[] upload = _uploadService.PostFile(fileDetailsDto.FileUpload);
+					var result = _fileService.SaveFile(fileDetailsDto.FileUpload.FileDetails, EFolder.ContributionFile);
 
 					var fileDetails = new FileDetails()
 					{
 						FileName = fileDetailsDto.FileUpload.FileDetails.FileName,
-						FileData = upload,
+						FilePath = result.Item2,
 						FileType = fileDetailsDto.FileUpload.FileType,
 						ContributionId = fileDetailsDto.ContributionId,
 					};
@@ -86,5 +94,12 @@ namespace UniMagContributions.Services
 				throw new Exception("Failed to upload files.", ex);
 			}
 		}
-	}
+
+		public FileContentResult DownloadMultipleFile(Guid contributionId)
+		{
+			List<FileDetails> fileDetails = _fileDetailRepository.GetFileDetailByContributionId(contributionId);
+            FileContentResult result = _fileService.DownloadMultipleFile(fileDetails, EFolder.ContributionFile);
+			return result;
+        }
+    }
 }

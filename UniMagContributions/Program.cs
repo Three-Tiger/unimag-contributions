@@ -38,6 +38,9 @@ builder.Services.AddScoped<IAnnualMagazineRepository, AnnualMagazineRepository>(
 builder.Services.AddScoped<IContributionRepository, ContributionRepository>();
 
 // Add services to the container.
+builder.Services.AddCors();
+
+// Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
 	options.TokenValidationParameters = new TokenValidationParameters
@@ -68,6 +71,14 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+app.UseCors(builder =>
+{
+    builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

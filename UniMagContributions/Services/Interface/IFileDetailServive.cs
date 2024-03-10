@@ -1,4 +1,5 @@
-﻿using UniMagContributions.Dto.FileDetails;
+﻿using Microsoft.AspNetCore.Mvc;
+using UniMagContributions.Dto.FileDetails;
 
 namespace UniMagContributions.Services.Interface
 {
@@ -10,7 +11,7 @@ namespace UniMagContributions.Services.Interface
 		string DeleteFileDetail(Guid id);
 		FileDetailDto GetFileDetailById(Guid id);
 		List<FileDetailDto> GetAllFileDetail();
-		string DownloadFileById(Guid id);
-		string DownloadFileByContributionId(Guid ContributionId);
-	}
+        FileContentResult DownloadFileById(Guid id);
+        FileContentResult DownloadMultipleFile(Guid contributionId);
+    }
 }
