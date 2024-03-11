@@ -28,6 +28,7 @@ builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IAnnualMagazineService, AnnualMagazineService>();
 builder.Services.AddScoped<IContributionService, ContributionService>();
 builder.Services.AddScoped<IFileDetailServive, FileDetailService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 // Add repositories to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IFileDetailRepository, FileDetailRepository>();
 builder.Services.AddScoped<IFacultyRepository, FacultyRepository>();
 builder.Services.AddScoped<IAnnualMagazineRepository, AnnualMagazineRepository>();
 builder.Services.AddScoped<IContributionRepository, ContributionRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
 // Add services to the container.
 builder.Services.AddCors();
