@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using UniMagContributions.Dto;
 using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Dto.Faculty;
@@ -24,8 +25,8 @@ namespace UniMagContributions.Controllers
 		[HttpGet]
 		public IActionResult Get()
 		{
-			List<ContributionDto> contribution = _contributionService.GetAllContribution();
-			return Ok(contribution);
+			List<ContributionDto> contributions = _contributionService.GetAllContribution();
+			return Ok(contributions);
 		}
 
 		[HttpGet("{id}")]
@@ -34,8 +35,8 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				ContributionDto facultyDto = _contributionService.GetContributionById(id);
-				return Ok(facultyDto);
+				ContributionDto contributionDto = _contributionService.GetContributionById(id);
+				return Ok(contributionDto);
 			}
 			catch (NotFoundException e)
 			{
@@ -49,7 +50,28 @@ namespace UniMagContributions.Controllers
 			}
 		}
 
-		[HttpPost]
+        [HttpGet("annual-magazine/{annualManagazinId}")]
+        public IActionResult GetContrubutionByAnnualMagazineId(Guid annualManagazinId)
+        {
+            ResponseDto response = new();
+            try
+            {
+                List<ContributionDto> contributions  = _contributionService.GetContributionByMagazineId(annualManagazinId);
+                return Ok(contributions);
+            }
+            catch (NotFoundException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status404NotFound, response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpPost]
 		public IActionResult Post([FromBody] CreateContributionDto createContributionDto)
 		{
 			if (!ModelState.IsValid)
@@ -87,7 +109,6 @@ namespace UniMagContributions.Controllers
 			try
 			{
 				ContributionDto contribution = _contributionService.UpdateContribution(id, updateContributionDto);
-
 				return Ok(contribution);
 			}
 			catch (NotFoundException e)

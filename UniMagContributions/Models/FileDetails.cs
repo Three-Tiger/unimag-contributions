@@ -13,7 +13,7 @@ namespace UniMagContributions.Models
 		[StringLength(255)]
 		public string FileName {  get; set; }
 		
-		public byte[] FileData { get; set; }
+		public string FilePath { get; set; }
 
 		public EFileType FileType { get; set; }
 

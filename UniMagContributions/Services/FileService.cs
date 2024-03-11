@@ -1,5 +1,9 @@
-﻿using UniMagContributions.Constraints;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.IO.Compression;
+using UniMagContributions.Constraints;
 using UniMagContributions.Dto.FileDetails;
+using UniMagContributions.Exceptions;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories.Interface;
 using UniMagContributions.Services.Interface;
@@ -17,34 +21,37 @@ namespace UniMagContributions.Services
             _fileDetailRepository = fileDetailRepository;
         }
 
-        public Tuple<int, string> SaveImage(IFormFile imageFile)
+        public Tuple<int, string> SaveFile(IFormFile file, EFolder folderName)
         {
             try
             {
-                var wwwPath = this.environment.WebRootPath;
-                var path = Path.Combine(wwwPath, "ProfilePicture");
+                string wwwPath = this.environment.WebRootPath;
+                string path = Path.Combine(wwwPath, folderName.ToString());
+
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
 
                 // Check the allowed extenstions
-                var ext = Path.GetExtension(imageFile.FileName);
-                var allowedExtensions = new string[] { ".jpg", ".png", ".jpeg" };
+                string ext = Path.GetExtension(file.FileName);
+                string[] allowedExtensions = new string[] { ".jpg", ".png", ".jpeg", ".pdf", ".docx", ".zip", ".rar" };
+
                 if (!allowedExtensions.Contains(ext))
                 {
                     string msg = string.Format("Only {0} extensions are allowed", string.Join(",", allowedExtensions));
-                    throw new ArgumentException(msg);
+                    throw new InvalidException(msg);
                 }
 
                 string uniqueString = Guid.NewGuid().ToString();
-                var newFileName = uniqueString + ext;
-                var fileWithPath = Path.Combine(path, newFileName);
+                string newFileName = uniqueString + ext;
+                string fileWithPath = Path.Combine(path, newFileName);
+
                 var stream = new FileStream(fileWithPath, FileMode.Create);
-                imageFile.CopyTo(stream);
+                file.CopyTo(stream);
                 stream.Close();
 
-                return new Tuple<int, string>(1, newFileName);
+                return new Tuple<int, string>(1, Path.Combine(folderName.ToString(), newFileName));
             }
             catch (Exception ex)
             {
@@ -52,23 +59,19 @@ namespace UniMagContributions.Services
             }
         }
 
-        public string getFilePath(string fileName)
-        {
-            string imagePath = "ProfilePicture/" + fileName;
-            return imagePath;
-        }
-
-        public bool DeleteImage(string imageFileName)
+        public bool DeleteFile(string fileName, EFolder folderName)
         {
             try
             {
                 var wwwPath = this.environment.WebRootPath;
-                var path = Path.Combine(wwwPath, "ProfilePicture\\", imageFileName);
-                if (System.IO.File.Exists(path))
+                var path = Path.Combine(wwwPath, folderName.ToString(), "\\", fileName);
+
+                if (File.Exists(path))
                 {
-                    System.IO.File.Delete(path);
+                    File.Delete(path);
                     return true;
                 }
+
                 return false;
             }
             catch
@@ -81,11 +84,11 @@ namespace UniMagContributions.Services
         {
             try
             {
-                byte[] bytes = null;
+                byte[]? bytes = null;
 
                 using (var stream = new MemoryStream())
                 {
-					fileUploadDto.FileDetails.CopyTo(stream);
+                    fileUploadDto.FileDetails.CopyTo(stream);
                     bytes = stream.ToArray();
                 }
 
@@ -97,51 +100,79 @@ namespace UniMagContributions.Services
             }
         }
 
-        public string DownloadFileById(FileDetails fileDetails)
+        public FileContentResult DownloadFileById(FileDetails fileDetails, EFolder folderName)
         {
-			/*try
+            try
             {
-                var content = new System.IO.MemoryStream(fileDetails.FileData);
+                string wwwPath = this.environment.WebRootPath;
+                var file = Path.Combine(wwwPath, fileDetails.FilePath);
 
-                var path = Path.Combine(
-                   Directory.GetCurrentDirectory(), "FileDownloaded", fileDetails.FileName);
+                // Read the file content into a memory stream
+                using (var fileStream = new FileStream(file, FileMode.Open))
+                {
+                    var memoryStream = new MemoryStream();
+                    fileStream.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
 
-                CopyStream(content, path);
-
-                return "Download Successful!";
+                    // Return the file content as a FileContentResult
+                    return new FileContentResult(memoryStream.ToArray(), "application/octet-stream")
+                    {
+                        FileDownloadName = fileDetails.FileName
+                    };
+                }
             }
             catch (Exception)
             {
                 throw;
-            }*/
+            }
+        }
 
-			try
-			{
-				var content = new System.IO.MemoryStream(fileDetails.FileData);
+        public FileContentResult DownloadMultipleFile(List<FileDetails> fileDetails, EFolder folderName)
+        {
+            try
+            {
+                string wwwPath = this.environment.WebRootPath;
+                var files = fileDetails.Select(x => Path.Combine(wwwPath, x.FilePath)).ToList();
 
-				// Specify the directory where you want to save the file
-				string downloadDirectory = @"C:\Downloads"; // Change this to your desired directory
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                    {
+                        foreach (var file in files)
+                        {
+                            var fileInfo = new FileInfo(file);
+                            if (!fileInfo.Exists)
+                            {
+                                throw new FileNotFoundException($"File not found: {fileInfo.FullName}");
+                            }
 
-				// Ensure the download directory exists; if not, create it
-				if (!Directory.Exists(downloadDirectory))
-				{
-					Directory.CreateDirectory(downloadDirectory);
-				}
+                            var entry = zipArchive.CreateEntry(fileInfo.Name);
 
-				// Combine the download directory path with the file name
-				var path = Path.Combine(downloadDirectory, fileDetails.FileName);
+                            using (var entryStream = entry.Open())
+                            using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
+                            {
+                                fileStream.CopyTo(entryStream);
+                            }
+                        }
+                    }
+                    memoryStream.Seek(0, SeekOrigin.Begin);
 
-				// Copy the file stream to the specified path
-				CopyStream(content, path);
-
-				return "Download Successful!";
-			}
-			catch (Exception ex)
-			{
-				// Handle exceptions appropriately
-				throw new Exception("Failed to download file.", ex);
-			}
-		}
+                    var zipFileName = $"{folderName}.zip";
+                    return new FileContentResult(memoryStream.ToArray(), "application/zip")
+                    {
+                        FileDownloadName = zipFileName
+                    };
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new Exception($"Failed to download files. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while downloading files. {ex.Message}");
+            }
+        }
 
         public async Task CopyStream(Stream stream, string downloadPath)
         {

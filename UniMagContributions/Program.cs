@@ -40,6 +40,9 @@ builder.Services.AddScoped<IContributionRepository, ContributionRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
 // Add services to the container.
+builder.Services.AddCors();
+
+// Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
 	options.TokenValidationParameters = new TokenValidationParameters
@@ -71,6 +74,14 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+app.UseCors(builder =>
+{
+    builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -79,10 +90,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
-{
-	await ApplicationDbContext.SeedAdminAsync(scope.ServiceProvider);
-}
 
 app.Run();

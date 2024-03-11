@@ -44,7 +44,7 @@ namespace UniMagContributions.Repositories
 		{
 			try
 			{
-				return _context.Faculties.ToList();
+				return _context.Faculties.Where(f => !f.Name.Equals("Admin")).ToList();
 			}
 			catch (Exception)
 			{

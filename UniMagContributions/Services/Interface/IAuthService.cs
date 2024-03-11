@@ -5,6 +5,6 @@ namespace UniMagContributions.Services.Interface
     public interface IAuthService
     {
         string Register(RegisterDto registerDto);
-        string Login(LoginDto loginDto);
+        AuthResponse Login(LoginDto loginDto);
     }
 }

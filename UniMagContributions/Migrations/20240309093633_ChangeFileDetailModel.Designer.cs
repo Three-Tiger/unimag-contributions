@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniMagContributions.Models;
 
@@ -11,9 +12,10 @@ using UniMagContributions.Models;
 namespace UniMagContributions.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240309093633_ChangeFileDetailModel")]
+    partial class ChangeFileDetailModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,53 +53,6 @@ namespace UniMagContributions.Migrations
                     b.HasKey("AnnualMagazineId");
 
                     b.ToTable("AnnualMagazines");
-
-                    b.HasData(
-                        new
-                        {
-                            AnnualMagazineId = new Guid("81495466-6fdb-45e6-bfd2-1995597d7df9"),
-                            AcademicYear = "2018-2019",
-                            ClosureDate = new DateTime(2019, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "The use of mobile phones has various effects on individuals and society. While they provide convenience and connectivity, overuse can lead to negative impacts such as decreased attention spans, disrupted sleep patterns, and increased risk of accidents due to distracted driving. Additionally, the production and disposal of mobile phones contribute to environmental pollution through the extraction of raw materials, energy consumption during manufacturing, and electronic waste generation.",
-                            FinalClosureDate = new DateTime(2019, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Effect of Using Mobile Phone"
-                        },
-                        new
-                        {
-                            AnnualMagazineId = new Guid("04df80e1-fd59-4121-af73-e5356a2abd2e"),
-                            AcademicYear = "2019-2020",
-                            ClosureDate = new DateTime(2020, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Environmental pollution refers to the contamination of the natural environment by harmful substances, resulting in adverse effects on ecosystems, human health, and biodiversity. Pollution sources include industrial activities, transportation, agriculture, and improper waste disposal. Consequences of pollution include air and water quality degradation, soil contamination, climate change, and negative impacts on wildlife and human populations.",
-                            FinalClosureDate = new DateTime(2020, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Environmental pollution and its consequences"
-                        },
-                        new
-                        {
-                            AnnualMagazineId = new Guid("3801a15f-18d4-40c3-8a70-28c8a35ca010"),
-                            AcademicYear = "2020-2021",
-                            ClosureDate = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Social media platforms have profoundly influenced modern society by changing communication patterns, social interactions, and information dissemination. While they facilitate connectivity and access to diverse perspectives, social media also raise concerns about privacy, mental health, and the spread of misinformation. The addictive nature of social media usage can lead to decreased productivity and increased feelings of loneliness and depression among users.",
-                            FinalClosureDate = new DateTime(2021, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "The impact of social media on society"
-                        },
-                        new
-                        {
-                            AnnualMagazineId = new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"),
-                            AcademicYear = "2021-2022",
-                            ClosureDate = new DateTime(2022, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "The practice of physically disciplining children, such as spanking or corporal punishment, remains a contentious issue. While some argue that it can be an effective way to discipline and teach obedience, others advocate for non-violent forms of discipline that focus on positive reinforcement and communication. Research suggests that physical punishment can have negative long-term effects on children's mental health and behavior, leading to aggression, low self-esteem, and increased likelihood of engaging in violent behavior.",
-                            FinalClosureDate = new DateTime(2022, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Should we beat children to educate them or not?"
-                        },
-                        new
-                        {
-                            AnnualMagazineId = new Guid("4f1e0068-0c6a-4a45-8f8c-92fc7f4e58b5"),
-                            AcademicYear = "2022-2023",
-                            ClosureDate = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Blockchain technology offers innovative solutions to enhance transparency, traceability, and efficiency in supply chain management. By creating a decentralized and immutable ledger of transactions, blockchain enables secure and verifiable recording of supply chain activities, including sourcing, production, transportation, and delivery. This technology can help mitigate risks such as counterfeiting, fraud, and supply chain disruptions while improving trust among stakeholders and ensuring ethical practices.",
-                            FinalClosureDate = new DateTime(2023, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Blockchain application in supply chain management"
-                        });
                 });
 
             modelBuilder.Entity("UniMagContributions.Models.Contribution", b =>
@@ -140,7 +95,8 @@ namespace UniMagContributions.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -157,42 +113,6 @@ namespace UniMagContributions.Migrations
                             FacultyId = new Guid("52b9ef2e-0e06-4443-8ec7-b008a0ffd30b"),
                             Description = "Admin Description",
                             Name = "Admin"
-                        },
-                        new
-                        {
-                            FacultyId = new Guid("3cf4f7fa-fdf1-420a-9e78-21ffb518144f"),
-                            Description = "This faculty focuses on the study and application of computing technology, encompassing areas such as computer systems, software development, networking, cybersecurity, database management, and more.",
-                            Name = "Information Technology"
-                        },
-                        new
-                        {
-                            FacultyId = new Guid("ca127f5c-126a-4f6a-9a03-167a6f6f5f44"),
-                            Description = "Artificial Intelligence (AI) involves the development of computer systems capable of performing tasks that typically require human intelligence. This faculty delves into machine learning, natural language processing, robotics, computer vision, and other AI techniques",
-                            Name = "Artificial Intelligence"
-                        },
-                        new
-                        {
-                            FacultyId = new Guid("f14662ff-c8e2-45af-bef1-aeb00413af73"),
-                            Description = "Graphic design is the art and practice of visual communication. It involves creating visual content using typography, images, and other elements to convey messages or ideas effectively. Students in this faculty learn about design principles, software tools, branding, and digital media.",
-                            Name = "Graphic Design"
-                        },
-                        new
-                        {
-                            FacultyId = new Guid("b338eded-0c32-421c-80c9-5aef828be112"),
-                            Description = "Business administration involves the management of operations and resources within an organization to achieve its objectives. This faculty covers various aspects of business management, including finance, human resources, marketing, operations, strategy, and organizational behavior.",
-                            Name = "Business Administration"
-                        },
-                        new
-                        {
-                            FacultyId = new Guid("a852f27c-f94d-48a0-8c94-d0467afc3b12"),
-                            Description = "International business focuses on the study of business activities that cross national borders. This faculty covers topics such as global trade, international finance, cultural differences, market entry strategies, global supply chain management, and international marketing.",
-                            Name = "International Business"
-                        },
-                        new
-                        {
-                            FacultyId = new Guid("2c0983c8-bded-48ee-a2fa-9389313152c8"),
-                            Description = "Marketing management involves the planning, implementation, and control of marketing programs to achieve organizational goals. This faculty covers market research, consumer behavior, advertising, branding, digital marketing, and strategic marketing planning.",
-                            Name = "Marketing Management"
                         });
                 });
 
@@ -322,22 +242,22 @@ namespace UniMagContributions.Migrations
                     b.HasData(
                         new
                         {
-                            RoleId = new Guid("0d160f4d-3d44-4d73-b6d2-501b034d8dc6"),
+                            RoleId = new Guid("5f488335-15c7-4047-9923-da21aafb14a7"),
                             Name = "Administrator"
                         },
                         new
                         {
-                            RoleId = new Guid("75afca28-6716-4a50-8ccb-eac3dc2d5470"),
+                            RoleId = new Guid("4a3eaf7d-713f-4ef5-94a0-0cabbb525846"),
                             Name = "Manager"
                         },
                         new
                         {
-                            RoleId = new Guid("ad0762dd-f0ce-48d6-9a9e-d58d986aec49"),
+                            RoleId = new Guid("6fd0e0e0-41cd-43c6-8aa6-20a709effd12"),
                             Name = "Coordinator"
                         },
                         new
                         {
-                            RoleId = new Guid("b57dab76-301d-49d2-883a-15ef47c19630"),
+                            RoleId = new Guid("19297c6f-9e38-4fc1-a975-9ad1c1c6114c"),
                             Name = "Student"
                         });
                 });
@@ -395,21 +315,6 @@ namespace UniMagContributions.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("86f04ea5-9421-42d0-bfde-e75a7b01dc3f"),
-                            Address = "Admin Address",
-                            DateOfBirth = new DateTime(2024, 3, 10, 23, 45, 15, 816, DateTimeKind.Local).AddTicks(9852),
-                            Email = "admin@gmail.com",
-                            FacultyId = new Guid("52b9ef2e-0e06-4443-8ec7-b008a0ffd30b"),
-                            FirstName = "Admin",
-                            LastName = "Admin",
-                            Password = "AQAAAAEAACcQAAAAEL12XjVZj2eTXgU0FZLNfJWo2JvvpPAcLhRn0lixXNub8ZQAFokPxGuAgU5cdNk5mA==",
-                            PhoneNumber = "1234567890",
-                            RoleId = new Guid("0d160f4d-3d44-4d73-b6d2-501b034d8dc6")
-                        });
                 });
 
             modelBuilder.Entity("UniMagContributions.Models.Contribution", b =>

@@ -60,8 +60,7 @@ namespace UniMagContributions.Controllers
             ResponseDto response = new();
             try
             {
-                AuthResponse authResponse = new();
-                authResponse.AccessToken = _authService.Login(loginDto);
+                AuthResponse authResponse = _authService.Login(loginDto);
                 return Ok(authResponse);
             }
             catch (AuthenticationException e)

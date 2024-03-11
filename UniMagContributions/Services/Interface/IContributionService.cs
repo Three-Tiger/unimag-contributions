@@ -8,6 +8,7 @@ namespace UniMagContributions.Services.Interface
 		ContributionDto UpdateContribution(Guid id, UpdateContributionDto contributionDto);
 		string DeleteContribution(Guid id);
 		ContributionDto GetContributionById(Guid id);
+		List<ContributionDto> GetContributionByMagazineId(Guid annualManagazinId);
 		List<ContributionDto> GetAllContribution();
 	}
 }

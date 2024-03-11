@@ -78,19 +78,6 @@ namespace UniMagContributions.Repositories
 			}
 		}
 
-		public AnnualMagazine GetAnnualMagazineByYear(string year)
-		{
-			try
-			{
-				AnnualMagazine annualMagazine = _context.AnnualMagazines.FirstOrDefault(u => u.AcademicYear == year);
-				return annualMagazine;
-			}
-			catch (Exception)
-			{
-				throw new Exception("Error getting Annual Magazine");
-			}
-		}
-
 		public void UpdateAnnualMagazine(AnnualMagazine annualMagazine)
 		{
 			try
@@ -103,5 +90,25 @@ namespace UniMagContributions.Repositories
 				throw new Exception("Error updating Annual Magazine");
 			}
 		}
+
+		public bool CheckUpdateAcademicYear(string academicYear, Guid id)
+		{
+            try
+			{
+                AnnualMagazine annualMagazine = _context.AnnualMagazines.AsNoTracking().FirstOrDefault(u => u.AcademicYear == academicYear);
+                if (annualMagazine != null)
+				{
+                    if (annualMagazine.AnnualMagazineId != id)
+					{
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception)
+			{
+                throw new Exception("Error checking Academic Year");
+            }
+        }
 	}
 }

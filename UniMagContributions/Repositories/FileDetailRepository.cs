@@ -43,7 +43,21 @@ namespace UniMagContributions.Repositories
 			}
 		}
 
-		public Role GetFileDetailByName(string name)
+		public List<FileDetails> GetFileDetailByContributionId(Guid contributionId)
+		{
+			try
+			{
+                List<FileDetails> file = _context.FileDetails.Where(x => x.ContributionId == contributionId).ToList();
+                return file;
+            }
+            catch (Exception)
+			{
+                throw new Exception("Error getting file");
+            }
+		}
+
+
+        public Role GetFileDetailByName(string name)
 		{
 			throw new NotImplementedException();
 		}

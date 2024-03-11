@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
 using UniMagContributions.Dto.Faculty;
@@ -7,6 +8,7 @@ using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
+	[Authorize(Roles = "Administrator")]
 	[Route("api/faculties")]
 	[ApiController]
 	public class FacultiesController : ControllerBase
@@ -18,7 +20,8 @@ namespace UniMagContributions.Controllers
 			_facultyService = facultyService;
 		}
 
-		[HttpGet]
+        [AllowAnonymous]
+        [HttpGet]
 		public IActionResult Get()
 		{
 			List<FacultyDto> faculties = _facultyService.GetAllFaculty();

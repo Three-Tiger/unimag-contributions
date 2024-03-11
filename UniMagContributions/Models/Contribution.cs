@@ -34,6 +34,5 @@ namespace UniMagContributions.Models
 		public virtual ICollection<FileDetails>? FileDetails { get; set; }
 
 		public virtual ICollection<ImageDetails>? ImageDetails { get; set; }
-
 	}
 }

@@ -1,5 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using UniMagContributions.Constraints;
+using UniMagContributions.Dto.AnnualMagazine;
+using UniMagContributions.Dto.FileDetails;
+using UniMagContributions.Dto.User;
 
 namespace UniMagContributions.Dto.Contribution
 {
@@ -11,10 +15,12 @@ namespace UniMagContributions.Dto.Contribution
 
 		public DateTime SubmissionDate { get; set; }
 
-		public EStatus Status { get; set; }
+		public string Status { get; set; }
 
-		public Guid UserId { get; set; }
+		public UserDto? User { get; set; }
 
-		public Guid AnnualMagazineId { get; set; }
+		public AnnualMagazineDto? AnnualMagazine { get; set; }
+
+		public ICollection<FileDetailDto>? FileDetails { get; set; }
 	}
 }
