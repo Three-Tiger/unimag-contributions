@@ -66,7 +66,6 @@ namespace UniMagContributions.Repositories
             }
         }
 
-
         public Contribution GetContributionById(Guid id)
         {
             try
