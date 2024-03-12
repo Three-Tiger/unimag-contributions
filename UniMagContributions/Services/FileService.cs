@@ -59,12 +59,12 @@ namespace UniMagContributions.Services
             }
         }
 
-        public bool DeleteFile(string fileName, EFolder folderName)
+        public bool DeleteFile(string filePath)
         {
             try
             {
                 var wwwPath = this.environment.WebRootPath;
-                var path = Path.Combine(wwwPath, folderName.ToString(), "\\", fileName);
+                var path = Path.Combine(wwwPath, filePath);
 
                 if (File.Exists(path))
                 {

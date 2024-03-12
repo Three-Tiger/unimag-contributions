@@ -9,7 +9,7 @@ namespace UniMagContributions.Services.Interface
     {
         Tuple<int, string> SaveFile(IFormFile imageFile, EFolder folderName);
 
-        bool DeleteFile(string imageFileName, EFolder folderName);
+        bool DeleteFile(string filePath);
 
         byte[] PostFile(FileUploadDto fileUploadDto);
 

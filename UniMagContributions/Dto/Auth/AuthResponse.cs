@@ -1,4 +1,5 @@
 ﻿using UniMagContributions.Constraints;
+using UniMagContributions.Dto.User;
 
 namespace UniMagContributions.Dto.Auth
 {
@@ -6,5 +7,6 @@ namespace UniMagContributions.Dto.Auth
     {
         public string AccessToken { get; set; }
         public string Role { get; set; }
+        public UserDto User { get; set; }
     }
 }

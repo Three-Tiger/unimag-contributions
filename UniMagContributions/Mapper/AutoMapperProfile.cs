@@ -31,6 +31,10 @@ namespace UniMagContributions.Mapper
             CreateMap<FileDetails, FileDetailDto>();
 
             CreateMap<User, UserDto>();
+            CreateMap<CreateUserDto, User>();
+            CreateMap<UpdateUserDto, User>();
+            /*CreateMap<UpdateUserDto, User>()
+                .ForMember(dest => dest.Password, opt => opt.Ignore());*/
 
             CreateMap<CreateContributionDto, Contribution>();
             CreateMap<UpdateContributionDto, Contribution>();
