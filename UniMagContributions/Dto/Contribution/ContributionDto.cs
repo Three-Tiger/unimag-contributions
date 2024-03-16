@@ -2,7 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using UniMagContributions.Constraints;
 using UniMagContributions.Dto.AnnualMagazine;
+using UniMagContributions.Dto.Feedback;
 using UniMagContributions.Dto.FileDetails;
+using UniMagContributions.Dto.ImageDetail;
 using UniMagContributions.Dto.User;
 
 namespace UniMagContributions.Dto.Contribution
@@ -22,5 +24,9 @@ namespace UniMagContributions.Dto.Contribution
 		public AnnualMagazineDto? AnnualMagazine { get; set; }
 
 		public ICollection<FileDetailDto>? FileDetails { get; set; }
-	}
+
+		public ICollection<ImageDetailDto>? ImageDetails { get; set; }
+
+        public ICollection<FeedbackDto>? Feedbacks { get; set; }
+    }
 }

@@ -27,7 +27,9 @@ namespace UniMagContributions.Dto.User
         [Required]
         public string Address { get; set; }
 
-        public IFormFile? ProfilePicture { get; set; }
+        public string? ProfilePicture { get; set; }
+
+        public IFormFile? NewProfilePicture { get; set; }
 
         [Required]
         public Guid FacultyId { get; set; }

@@ -84,5 +84,31 @@ namespace UniMagContributions.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
+
+        [HttpPut("{id}/change-password")]
+        public IActionResult ChangePassword(Guid id, [FromBody] ChangePasswordDto changePasswordDto)
+        {
+            ResponseDto response = new();
+            try
+            {
+                response.Message = _userService.ChangePassword(id, changePasswordDto);
+                return Ok(response);
+            }
+            catch (NotFoundException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status404NotFound, response);
+            }
+            catch (InvalidException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status400BadRequest, response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
     }
 }

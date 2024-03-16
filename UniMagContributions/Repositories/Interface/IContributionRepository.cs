@@ -11,5 +11,6 @@ namespace UniMagContributions.Repositories.Interface
 		List<Contribution> GetContributionByMagazineId(Guid annualManagazinId);
 		void UpdateContribution(Contribution contribution);
 		void DeleteContribution(Contribution contribution);
+		Contribution IsContributionExist(Guid userId, Guid annualMagazineId);
 	}
 }

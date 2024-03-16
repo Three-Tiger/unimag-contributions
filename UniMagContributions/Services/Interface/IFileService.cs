@@ -13,8 +13,14 @@ namespace UniMagContributions.Services.Interface
 
         byte[] PostFile(FileUploadDto fileUploadDto);
 
-        FileContentResult DownloadFileById(FileDetails fileDetails, EFolder folderName);
+        FileContentResult GetFile(string filePath);
+
+        FileContentResult DownloadFileById(FileDetails fileDetails);
+
+        FileContentResult DownloadFileById(ImageDetails imageDetails);
 
         FileContentResult DownloadMultipleFile(List<FileDetails> fileDetails, EFolder folderName);
-	}
+
+        FileContentResult DownloadMultipleFile(List<ImageDetails> fileDetails, EFolder folderName);
+    }
 }

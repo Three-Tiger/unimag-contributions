@@ -13,12 +13,10 @@ namespace UniMagContributions.Services
     public class FileService : IFileService
     {
         private readonly IWebHostEnvironment environment;
-        private readonly IFileDetailRepository _fileDetailRepository;
 
-        public FileService(IWebHostEnvironment env, IFileDetailRepository fileDetailRepository)
+        public FileService(IWebHostEnvironment env)
         {
             environment = env;
-            _fileDetailRepository = fileDetailRepository;
         }
 
         public Tuple<int, string> SaveFile(IFormFile file, EFolder folderName)
@@ -100,7 +98,28 @@ namespace UniMagContributions.Services
             }
         }
 
-        public FileContentResult DownloadFileById(FileDetails fileDetails, EFolder folderName)
+        public FileContentResult GetFile(string filePath)
+        {
+            try
+            {
+                string wwwPath = this.environment.WebRootPath;
+                var file = Path.Combine(wwwPath, filePath);
+
+                if (!File.Exists(file))
+                {
+                    throw new NotFoundException("File not found");
+                }
+
+                byte[] fileBytes = File.ReadAllBytes(file);
+                return new FileContentResult(fileBytes, "image/jpeg");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public FileContentResult DownloadFileById(FileDetails fileDetails)
         {
             try
             {
@@ -127,12 +146,86 @@ namespace UniMagContributions.Services
             }
         }
 
+        public FileContentResult DownloadFileById(ImageDetails imageDetails)
+        {
+            try
+            {
+                string wwwPath = this.environment.WebRootPath;
+                var file = Path.Combine(wwwPath, imageDetails.ImagePath);
+
+                // Read the file content into a memory stream
+                using (var fileStream = new FileStream(file, FileMode.Open))
+                {
+                    var memoryStream = new MemoryStream();
+                    fileStream.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+
+                    // Return the file content as a FileContentResult
+                    return new FileContentResult(memoryStream.ToArray(), "application/octet-stream")
+                    {
+                        FileDownloadName = imageDetails.ImageName
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public FileContentResult DownloadMultipleFile(List<FileDetails> fileDetails, EFolder folderName)
         {
             try
             {
                 string wwwPath = this.environment.WebRootPath;
                 var files = fileDetails.Select(x => Path.Combine(wwwPath, x.FilePath)).ToList();
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                    {
+                        foreach (var file in files)
+                        {
+                            var fileInfo = new FileInfo(file);
+                            if (!fileInfo.Exists)
+                            {
+                                throw new FileNotFoundException($"File not found: {fileInfo.FullName}");
+                            }
+
+                            var entry = zipArchive.CreateEntry(fileInfo.Name);
+
+                            using (var entryStream = entry.Open())
+                            using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
+                            {
+                                fileStream.CopyTo(entryStream);
+                            }
+                        }
+                    }
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
+                    var zipFileName = $"{folderName}.zip";
+                    return new FileContentResult(memoryStream.ToArray(), "application/zip")
+                    {
+                        FileDownloadName = zipFileName
+                    };
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new Exception($"Failed to download files. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while downloading files. {ex.Message}");
+            }
+        }
+
+        public FileContentResult DownloadMultipleFile(List<ImageDetails> imageDetails, EFolder folderName)
+        {
+            try
+            {
+                string wwwPath = this.environment.WebRootPath;
+                var files = imageDetails.Select(x => Path.Combine(wwwPath, x.ImagePath)).ToList();
 
                 using (var memoryStream = new MemoryStream())
                 {

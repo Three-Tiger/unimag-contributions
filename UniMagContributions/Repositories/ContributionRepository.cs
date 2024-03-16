@@ -57,6 +57,8 @@ namespace UniMagContributions.Repositories
             {
                 return _context.Contributions
                     .Include(u => u.User).ThenInclude(u => u.Faculty)
+                    .Include(f => f.FileDetails)
+                    .Include(a => a.ImageDetails)
                     .Where(u => u.AnnualMagazineId == annualManagazinId)
                     .ToList();
             }
@@ -73,6 +75,8 @@ namespace UniMagContributions.Repositories
                 return _context.Contributions
                     .Include(u => u.User).ThenInclude(u => u.Faculty)
                     .Include(f => f.FileDetails)
+                    .Include(i => i.ImageDetails)
+                    .Include(f => f.Feedbacks)
                     .Where(u => u.ContributionId == id)
                     .AsNoTracking()
                     .FirstOrDefault();
@@ -106,6 +110,18 @@ namespace UniMagContributions.Repositories
             catch (Exception)
             {
                 throw new Exception("Error updating Contribution");
+            }
+        }
+
+        public Contribution IsContributionExist(Guid userId, Guid annualMagazineId)
+        {
+            try
+            {
+                return _context.Contributions.FirstOrDefault(u => u.UserId == userId && u.AnnualMagazineId == annualMagazineId);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error checking Contribution");
             }
         }
     }

@@ -49,7 +49,7 @@ namespace UniMagContributions.Controllers
 		[HttpPost("multiple-file")]
 		public IActionResult Post([FromForm] List<CreateaFileDetailsDto> fileDetails)
 		{
-			if (fileDetails == null)
+			if (fileDetails.Count == 0)
 			{
 				return BadRequest(ModelState);
 			}

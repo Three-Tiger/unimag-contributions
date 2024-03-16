@@ -11,5 +11,6 @@ namespace UniMagContributions.Services.Interface
         string DeleteUser(Guid userId);
         UserDto CreateUser(UserDto userDto);
         List<UserDto> GetAllUser();
+        string ChangePassword(Guid userId, ChangePasswordDto changePasswordDto);
     }
 }
