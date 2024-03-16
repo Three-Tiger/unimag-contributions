@@ -76,7 +76,7 @@ namespace UniMagContributions.Repositories
                     .Include(u => u.User).ThenInclude(u => u.Faculty)
                     .Include(f => f.FileDetails)
                     .Include(i => i.ImageDetails)
-                    .Include(f => f.Feedbacks)
+                    .Include(f => f.Feedbacks).ThenInclude(u => u.User)
                     .Where(u => u.ContributionId == id)
                     .AsNoTracking()
                     .FirstOrDefault();

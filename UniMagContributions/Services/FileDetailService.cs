@@ -117,5 +117,16 @@ namespace UniMagContributions.Services
             FileContentResult result = _fileService.DownloadMultipleFile(fileDetails, EFolder.ContributionFile);
             return result;
         }
+
+        public string DeleteFileByContributionId(Guid contributionId)
+        {
+            List<FileDetails> fileDetails = _fileDetailRepository.GetFileDetailByContributionId(contributionId);
+            foreach (var file in fileDetails)
+            {
+                _fileService.DeleteFile(file.FilePath);
+                _fileDetailRepository.DeleteFileDetail(file);
+            }
+            return "Delete successful";
+        }
     }
 }

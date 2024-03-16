@@ -27,7 +27,15 @@ namespace UniMagContributions.Repositories
 
         public void DeleteImageDetail(ImageDetails imageDetails)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.ImageDetails.Remove(imageDetails);
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error deleting file");
+            }
         }
 
         public List<ImageDetails> GetImageDetailByContributionId(Guid contributionId)

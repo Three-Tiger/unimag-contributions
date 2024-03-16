@@ -98,5 +98,16 @@ namespace UniMagContributions.Services
             List<ImageDetails> imageDetails = _imageDetailRepository.GetImageDetailByContributionId(contributionId);
             return _fileService.DownloadMultipleFile(imageDetails, EFolder.ContributionImage);
         }
+
+        public string DeleteImageByContributionId(Guid contributionId)
+        {
+            List<ImageDetails> imageDetails = _imageDetailRepository.GetImageDetailByContributionId(contributionId);
+            foreach (var image in imageDetails)
+            {
+                _fileService.DeleteFile(image.ImagePath);
+                _imageDetailRepository.DeleteImageDetail(image);
+            }
+            return "Delete successful";
+        }
     }
 }

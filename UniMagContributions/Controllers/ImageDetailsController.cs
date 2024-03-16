@@ -124,5 +124,21 @@ namespace UniMagContributions.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
+
+        [HttpDelete("contribution/{contributionId}")]
+        public IActionResult DeleteImageByContributionId(Guid contributionId)
+        {
+            ResponseDto response = new();
+            try
+            {
+                response.Message = _imageDetailService.DeleteImageByContributionId(contributionId);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
     }
 }

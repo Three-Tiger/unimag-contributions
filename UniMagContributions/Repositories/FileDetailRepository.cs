@@ -27,7 +27,15 @@ namespace UniMagContributions.Repositories
 
 		public void DeleteFileDetail(FileDetails fileDetails)
 		{
-			throw new NotImplementedException();
+			try
+			{
+                _context.FileDetails.Remove(fileDetails);
+                _context.SaveChanges();
+            }
+            catch (Exception)
+			{
+                throw new Exception("Error deleting file");
+            }
 		}
 
 		public FileDetails GetFileDetailById(Guid id)

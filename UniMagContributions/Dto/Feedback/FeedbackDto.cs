@@ -1,4 +1,6 @@
-﻿namespace UniMagContributions.Dto.Feedback
+﻿using UniMagContributions.Dto.User;
+
+namespace UniMagContributions.Dto.Feedback
 {
 	public class FeedbackDto
 	{
@@ -11,5 +13,7 @@
 		public Guid UserId { get; set; }
 
 		public Guid ContributionId { get; set; }
+
+		public UserDto? User { get; set; }
 	}
 }
