@@ -45,7 +45,7 @@ namespace UniMagContributions.Repositories
 		{
 			try
 			{
-				return _context.AnnualMagazines.ToList();
+				return _context.AnnualMagazines.OrderByDescending(a => a.FinalClosureDate).ToList();
 			}
 			catch (Exception)
 			{

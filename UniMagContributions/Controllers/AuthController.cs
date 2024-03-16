@@ -74,11 +74,5 @@ namespace UniMagContributions.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
-
-        [HttpPost("logout")]
-        public IActionResult Logout()
-        {
-            return Ok();
-        }
     }
 }

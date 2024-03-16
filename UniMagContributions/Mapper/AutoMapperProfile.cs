@@ -7,6 +7,7 @@ using UniMagContributions.Dto.FileDetails;
 using UniMagContributions.Dto.User;
 using UniMagContributions.Dto.Feedback;
 using UniMagContributions.Models;
+using UniMagContributions.Dto.ImageDetail;
 
 namespace UniMagContributions.Mapper
 {
@@ -29,8 +30,13 @@ namespace UniMagContributions.Mapper
             CreateMap<Contribution, ContributionDto>();
 
             CreateMap<FileDetails, FileDetailDto>();
+            CreateMap<ImageDetails, ImageDetailDto>();
 
             CreateMap<User, UserDto>();
+            CreateMap<CreateUserDto, User>();
+            CreateMap<UpdateUserDto, User>();
+            /*CreateMap<UpdateUserDto, User>()
+                .ForMember(dest => dest.Password, opt => opt.Ignore());*/
 
             CreateMap<CreateContributionDto, Contribution>();
             CreateMap<UpdateContributionDto, Contribution>();

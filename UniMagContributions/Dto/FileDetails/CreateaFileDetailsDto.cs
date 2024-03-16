@@ -6,6 +6,6 @@ namespace UniMagContributions.Dto.FileDetails
 	{
 		public Guid ContributionId { get; set; }
 
-		public FileUploadDto FileUpload { get; set; }
+		public IFormFile FileUpload { get; set; }
 	}
 }

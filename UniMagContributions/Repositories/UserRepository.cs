@@ -45,7 +45,10 @@ namespace UniMagContributions.Repositories
         {
             try
             {
-                return _context.Users.FirstOrDefault(u => u.UserId == id);
+                return _context.Users
+                    .Include(u => u.Faculty)
+                    .AsNoTracking()
+                    .FirstOrDefault(u => u.UserId == id);
             }
             catch (Exception)
             {

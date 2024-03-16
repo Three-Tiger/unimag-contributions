@@ -9,12 +9,18 @@ namespace UniMagContributions.Services.Interface
     {
         Tuple<int, string> SaveFile(IFormFile imageFile, EFolder folderName);
 
-        bool DeleteFile(string imageFileName, EFolder folderName);
+        bool DeleteFile(string filePath);
 
         byte[] PostFile(FileUploadDto fileUploadDto);
 
-        FileContentResult DownloadFileById(FileDetails fileDetails, EFolder folderName);
+        FileContentResult GetFile(string filePath);
+
+        FileContentResult DownloadFileById(FileDetails fileDetails);
+
+        FileContentResult DownloadFileById(ImageDetails imageDetails);
 
         FileContentResult DownloadMultipleFile(List<FileDetails> fileDetails, EFolder folderName);
-	}
+
+        FileContentResult DownloadMultipleFile(List<ImageDetails> fileDetails, EFolder folderName);
+    }
 }

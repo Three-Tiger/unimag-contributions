@@ -8,20 +8,20 @@ using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Services
 {
-	public class FileDetailService : IFileDetailServive
-	{
-		private readonly IFileService _fileService;
-		private readonly IFileDetailRepository _fileDetailRepository;
+    public class FileDetailService : IFileDetailServive
+    {
+        private readonly IFileService _fileService;
+        private readonly IFileDetailRepository _fileDetailRepository;
 
-		public FileDetailService(IFileService uploadService, IFileDetailRepository fileDetailRepository)
-		{
-			_fileService = uploadService;
-			_fileDetailRepository = fileDetailRepository;
-		}
+        public FileDetailService(IFileService uploadService, IFileDetailRepository fileDetailRepository)
+        {
+            _fileService = uploadService;
+            _fileDetailRepository = fileDetailRepository;
+        }
 
-		public string AddFileDetail(CreateaFileDetailsDto fileDetailsDto)
-		{
-			var result = _fileService.SaveFile(fileDetailsDto.FileUpload.FileDetails, EFolder.ContributionFile);
+        public string AddFileDetail(CreateaFileDetailsDto fileDetailsDto)
+        {
+            var result = _fileService.SaveFile(fileDetailsDto.FileUpload, EFolder.ContributionFile);
 
             // if it is not right format
             if (result.Item1 == 0)
@@ -30,76 +30,103 @@ namespace UniMagContributions.Services
             }
 
             var fileDetails = new FileDetails()
-			{
-				FileName = fileDetailsDto.FileUpload.FileDetails.FileName,
-				FilePath = result.Item2,
-				FileType = fileDetailsDto.FileUpload.FileType,
-				ContributionId = fileDetailsDto.ContributionId,
-			};
+            {
+                FileName = fileDetailsDto.FileUpload.FileName,
+                FilePath = result.Item2,
+                FileType = GetFileType(fileDetailsDto.FileUpload.FileName),
+                ContributionId = fileDetailsDto.ContributionId,
+            };
 
-			_fileDetailRepository.CreateFileDetail(fileDetails);
+            _fileDetailRepository.CreateFileDetail(fileDetails);
 
-			return "Upload Success!";
-		}
+            return "Upload Success!";
+        }
 
-		public FileContentResult DownloadFileById(Guid id)
-		{
-			FileDetails fileDetails = _fileDetailRepository.GetFileDetailById(id);
-			return _fileService.DownloadFileById(fileDetails, EFolder.ContributionFile);
-		}
+        public EFileType GetFileType(string fileName)
+        {
+            return Path.GetExtension(fileName) switch
+            {
+                ".pdf" => EFileType.PDF,
+                ".docx" => EFileType.DOCX,
+                _ => EFileType.PDF,
+            };
+        }
 
-		public string DeleteFileDetail(Guid id)
-		{
-			throw new NotImplementedException();
-		}
+        public FileContentResult DownloadFileById(Guid id)
+        {
+            FileDetails fileDetails = _fileDetailRepository.GetFileDetailById(id);
+            return _fileService.DownloadFileById(fileDetails);
+        }
 
-		public List<FileDetailDto> GetAllFileDetail()
-		{
-			throw new NotImplementedException();
-		}
+        public string DeleteFileDetail(Guid id)
+        {
+            throw new NotImplementedException();
+        }
 
-		public FileDetailDto GetFileDetailById(Guid id)
-		{
-			throw new NotImplementedException();
-		}
+        public List<FileDetailDto> GetAllFileDetail()
+        {
+            throw new NotImplementedException();
+        }
 
-		public FileDetailDto UpdateFileDetail(Guid id, UpdateFileDetailsDto fileDetailsDto)
-		{
-			throw new NotImplementedException();
-		}
+        public FileDetailDto GetFileDetailById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
 
-		public string AddMultipleFileDetail(List<CreateaFileDetailsDto> FileDetailDto)
-		{
-			try
-			{
-				foreach (var fileDetailsDto in FileDetailDto)
-				{
-					var result = _fileService.SaveFile(fileDetailsDto.FileUpload.FileDetails, EFolder.ContributionFile);
+        public FileDetailDto UpdateFileDetail(Guid id, UpdateFileDetailsDto fileDetailsDto)
+        {
+            throw new NotImplementedException();
+        }
 
-					var fileDetails = new FileDetails()
-					{
-						FileName = fileDetailsDto.FileUpload.FileDetails.FileName,
-						FilePath = result.Item2,
-						FileType = fileDetailsDto.FileUpload.FileType,
-						ContributionId = fileDetailsDto.ContributionId,
-					};
+        public string AddMultipleFileDetail(List<CreateaFileDetailsDto> FileDetailDto)
+        {
+            try
+            {
+                foreach (var fileDetailsDto in FileDetailDto)
+                {
+                    var result = _fileService.SaveFile(fileDetailsDto.FileUpload, EFolder.ContributionFile);
 
-					_fileDetailRepository.CreateFileDetail(fileDetails);
-				}
+                    // if it is not right format
+                    if (result.Item1 == 0)
+                    {
+                        throw new InvalidException(result.Item2);
+                    }
 
-				return "Upload Success!";
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("Failed to upload files.", ex);
-			}
-		}
+                    var fileDetails = new FileDetails()
+                    {
+                        FileName = fileDetailsDto.FileUpload.FileName,
+                        FilePath = result.Item2,
+                        FileType = GetFileType(fileDetailsDto.FileUpload.FileName),
+                        ContributionId = fileDetailsDto.ContributionId,
+                    };
 
-		public FileContentResult DownloadMultipleFile(Guid contributionId)
-		{
-			List<FileDetails> fileDetails = _fileDetailRepository.GetFileDetailByContributionId(contributionId);
+                    _fileDetailRepository.CreateFileDetail(fileDetails);
+                }
+
+                return "Upload Success!";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to upload files.", ex);
+            }
+        }
+
+        public FileContentResult DownloadMultipleFile(Guid contributionId)
+        {
+            List<FileDetails> fileDetails = _fileDetailRepository.GetFileDetailByContributionId(contributionId);
             FileContentResult result = _fileService.DownloadMultipleFile(fileDetails, EFolder.ContributionFile);
-			return result;
+            return result;
+        }
+
+        public string DeleteFileByContributionId(Guid contributionId)
+        {
+            List<FileDetails> fileDetails = _fileDetailRepository.GetFileDetailByContributionId(contributionId);
+            foreach (var file in fileDetails)
+            {
+                _fileService.DeleteFile(file.FilePath);
+                _fileDetailRepository.DeleteFileDetail(file);
+            }
+            return "Delete successful";
         }
     }
 }

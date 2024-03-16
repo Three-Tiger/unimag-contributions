@@ -13,5 +13,6 @@ namespace UniMagContributions.Services.Interface
 		List<FileDetailDto> GetAllFileDetail();
         FileContentResult DownloadFileById(Guid id);
         FileContentResult DownloadMultipleFile(Guid contributionId);
+		string DeleteFileByContributionId(Guid contributionId);
     }
 }

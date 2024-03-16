@@ -49,7 +49,7 @@ namespace UniMagContributions.Controllers
 		[HttpPost("multiple-file")]
 		public IActionResult Post([FromForm] List<CreateaFileDetailsDto> fileDetails)
 		{
-			if (fileDetails == null)
+			if (fileDetails.Count == 0)
 			{
 				return BadRequest(ModelState);
 			}
@@ -100,6 +100,22 @@ namespace UniMagContributions.Controllers
             catch (Exception e)
             {
 				response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+		[HttpDelete("contribution/{contributionId}")]
+		public IActionResult DeleteFileByContributionId(Guid contributionId)
+		{
+            ResponseDto response = new();
+            try
+            {
+                response.Message = _fileDetailServive.DeleteFileByContributionId(contributionId);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }

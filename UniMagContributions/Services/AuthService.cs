@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using UniMagContributions.Constraints;
 using UniMagContributions.Dto.Auth;
+using UniMagContributions.Dto.User;
 using UniMagContributions.Exceptions;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories;
@@ -109,7 +110,9 @@ namespace UniMagContributions.Services
             string accessToken = tokenHandler.WriteToken(token);
             string role = user.Role.Name;
 
-            return new AuthResponse { AccessToken = accessToken, Role = role };
+            UserDto userDto = _mapper.Map<UserDto>(user);
+
+            return new AuthResponse { AccessToken = accessToken, Role = role, User = userDto };
         }
     }
 }
