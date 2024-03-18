@@ -9,5 +9,6 @@ namespace UniMagContributions.Repositories.Interface
         Role GetRoleById(Guid id);
         void UpdateRole(Role role);
         void DeleteRole(Role role);
+        List<Role> GetRoles();
     }
 }

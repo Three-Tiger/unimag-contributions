@@ -6,6 +6,7 @@ using UniMagContributions.Dto.Auth;
 using UniMagContributions.Dto.User;
 using UniMagContributions.Exceptions;
 using UniMagContributions.Models;
+using UniMagContributions.Repositories;
 using UniMagContributions.Repositories.Interface;
 using UniMagContributions.Services.Interface;
 
@@ -26,19 +27,57 @@ namespace UniMagContributions.Services
             _mapper = mapper;
         }
 
-        public UserDto CreateUser(UserDto userDto)
+        public UserDto CreateUser(CreateUserDto userDto)
         {
-            throw new NotImplementedException();
+            // Get user by email
+            User user = _userRepository.GetUserByEmail(userDto.Email);
+            if (user != null)
+            {
+                throw new ConflictException("Email already exists");
+            }
+
+            // Hash password
+            var passwordHasher = new PasswordHasher<string>();
+            userDto.Password = passwordHasher.HashPassword(null, userDto.Password);
+
+            // Map registerDto to user
+            user = _mapper.Map<User>(userDto);
+
+            // Save profile picture
+            if (userDto.NewProfilePicture != null)
+            {
+                var result = _fileService.SaveFile(userDto.NewProfilePicture, EFolder.ProfilePicture);
+                // if it is not right format
+                if (result.Item1 == 0)
+                {
+                    throw new InvalidException(result.Item2);
+                }
+                user.ProfilePicture = result.Item2;
+            }
+
+            // Create user
+            _userRepository.CreateUser(user);
+
+            return _mapper.Map<UserDto>(_userRepository.GetUserById(user.UserId));
         }
 
         public string DeleteUser(Guid userId)
         {
-            throw new NotImplementedException();
+            User user = _userRepository.GetUserById(userId) ?? throw new NotFoundException("User not found");
+
+            if (user.ProfilePicture != null)
+            {
+                _fileService.DeleteFile(user.ProfilePicture);
+            }
+            _userRepository.DeleteUser(user);
+
+            return "User deleted successfully";
         }
 
         public List<UserDto> GetAllUser()
         {
-            throw new NotImplementedException();
+            List<User> users = _userRepository.GetAllUser();
+            return _mapper.Map<List<UserDto>>(users);
         }
 
         public UserDto GetUserById(Guid userId)
@@ -55,21 +94,10 @@ namespace UniMagContributions.Services
             {
                 throw new NotFoundException("User does not have profile image");
             }
-
-            /*string wwwPath = this.environment.WebRootPath;
-            var file = Path.Combine(wwwPath, user.ProfilePicture);
-
-            if (!File.Exists(file))
-            {
-                throw new NotFoundException("File not found");
-            }
-
-            byte[] fileBytes = File.ReadAllBytes(file);
-            return new FileContentResult(fileBytes, "image/jpeg");*/
             return _fileService.GetFile(user.ProfilePicture);
         }
 
-        public UserDto UpdateUser(Guid id, UpdateUserDto updateUserDto)
+        public UserDto UpdateProfile(Guid id, UpdateUserDto updateUserDto)
         {
             User user = _userRepository.GetUserById(id) ?? throw new NotFoundException("User not found");
 
@@ -87,15 +115,43 @@ namespace UniMagContributions.Services
                     throw new InvalidException(result.Item2);
                 }
                 user.ProfilePicture = result.Item2;
-                if (!_fileService.DeleteFile(updateUserDto.ProfilePicture))
-                {
-                    throw new Exception("Error deleting old profile picture");
-                }
+                _fileService.DeleteFile(updateUserDto.ProfilePicture);
             }
 
             _userRepository.UpdateUser(user);
 
             return _mapper.Map<UserDto>(user);
+        }
+
+        public UserDto UpdateUser(Guid id, UpdateUserDto updateUserDto)
+        {
+            User user = _userRepository.GetUserById(id) ?? throw new NotFoundException("User not found");
+            updateUserDto.UserId = id;
+
+            if (updateUserDto.Password != null)
+            {
+                updateUserDto.Password = HashPassword(updateUserDto.Password);
+            } else
+            {
+                updateUserDto.Password = user.Password;
+            }
+
+            user = _mapper.Map<User>(updateUserDto);
+
+            if (updateUserDto.NewProfilePicture != null)
+            {
+                var result = _fileService.SaveFile(updateUserDto.NewProfilePicture, EFolder.ProfilePicture);
+                if (result.Item1 == 0)
+                {
+                    throw new InvalidException(result.Item2);
+                }
+                user.ProfilePicture = result.Item2;
+                _fileService.DeleteFile(updateUserDto.ProfilePicture);
+            }
+
+            _userRepository.UpdateUser(user);
+
+            return _mapper.Map<UserDto>(_userRepository.GetUserById(user.UserId));
         }
 
         public string ChangePassword(Guid userId, ChangePasswordDto changePasswordDto)

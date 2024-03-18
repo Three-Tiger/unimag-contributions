@@ -34,6 +34,7 @@ namespace UniMagContributions.Dto.User
         [Required]
         public Guid FacultyId { get; set; }
 
+        [Required]
         public Guid? RoleId { get; set; }
     }
 }

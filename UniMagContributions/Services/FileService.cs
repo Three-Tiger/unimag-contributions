@@ -203,7 +203,8 @@ namespace UniMagContributions.Services
                     }
                     memoryStream.Seek(0, SeekOrigin.Begin);
 
-                    var zipFileName = $"{folderName}.zip";
+                    string uniqueString = Guid.NewGuid().ToString();
+                    var zipFileName = $"{folderName}-{uniqueString}.zip";
                     return new FileContentResult(memoryStream.ToArray(), "application/zip")
                     {
                         FileDownloadName = zipFileName
@@ -250,7 +251,8 @@ namespace UniMagContributions.Services
                     }
                     memoryStream.Seek(0, SeekOrigin.Begin);
 
-                    var zipFileName = $"{folderName}.zip";
+                    string uniqueString = Guid.NewGuid().ToString();
+                    var zipFileName = $"{folderName}-{uniqueString}.zip";
                     return new FileContentResult(memoryStream.ToArray(), "application/zip")
                     {
                         FileDownloadName = zipFileName
@@ -260,6 +262,41 @@ namespace UniMagContributions.Services
             catch (FileNotFoundException ex)
             {
                 throw new Exception($"Failed to download files. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while downloading files. {ex.Message}");
+            }
+        }
+
+        public FileContentResult DownloadMultipleFile(List<FileContentResult> fileContentResults, EFolder folderName)
+        {
+            try
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                    {
+                        foreach (var file in fileContentResults)
+                        {
+                            var entry = zipArchive.CreateEntry(file.FileDownloadName);
+
+                            using (var entryStream = entry.Open())
+                            using (var fileStream = new MemoryStream(file.FileContents))
+                            {
+                                fileStream.CopyTo(entryStream);
+                            }
+                        }
+                    }
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
+                    string uniqueString = Guid.NewGuid().ToString();
+                    var zipFileName = $"{folderName}-{uniqueString}.zip";
+                    return new FileContentResult(memoryStream.ToArray(), "application/zip")
+                    {
+                        FileDownloadName = zipFileName
+                    };
+                }
             }
             catch (Exception ex)
             {
