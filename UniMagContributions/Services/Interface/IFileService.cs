@@ -22,5 +22,7 @@ namespace UniMagContributions.Services.Interface
         FileContentResult DownloadMultipleFile(List<FileDetails> fileDetails, EFolder folderName);
 
         FileContentResult DownloadMultipleFile(List<ImageDetails> fileDetails, EFolder folderName);
+
+        FileContentResult DownloadMultipleFile(List<FileContentResult> fileContentResults, EFolder folderName);
     }
 }

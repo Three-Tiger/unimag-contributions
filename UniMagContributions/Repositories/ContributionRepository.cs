@@ -60,6 +60,7 @@ namespace UniMagContributions.Repositories
                     .Include(f => f.FileDetails)
                     .Include(a => a.ImageDetails)
                     .Where(u => u.AnnualMagazineId == annualManagazinId)
+                    .OrderByDescending(c => c.SubmissionDate)
                     .ToList();
             }
             catch (Exception)

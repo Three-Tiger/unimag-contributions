@@ -118,6 +118,22 @@ namespace UniMagContributions.Services
             return result;
         }
 
+        public FileContentResult DownloadMultipleFileByListContributionId(List<Guid> lstContributionId)
+        {
+            List<FileContentResult> lstResult = new List<FileContentResult>();
+
+            foreach (Guid contributionId in lstContributionId)
+            {
+                List<FileDetails> fileDetails = _fileDetailRepository.GetFileDetailByContributionId(contributionId);
+                FileContentResult fileResult = _fileService.DownloadMultipleFile(fileDetails, EFolder.ContributionFile);
+                lstResult.Add(fileResult);
+            }
+
+            FileContentResult result = _fileService.DownloadMultipleFile(lstResult, EFolder.ContributionFile);
+
+            return result;
+        }
+
         public string DeleteFileByContributionId(Guid contributionId)
         {
             List<FileDetails> fileDetails = _fileDetailRepository.GetFileDetailByContributionId(contributionId);

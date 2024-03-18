@@ -75,5 +75,19 @@ namespace UniMagContributions.Repositories
                 throw new Exception("Error deleting role");
             }
         }
+
+        public List<Role> GetRoles()
+        {
+            try
+            {
+                return _context.Roles
+                    .Where(r => r.Name != "Administrator")
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error getting roles");
+            }
+        }
     }
 }

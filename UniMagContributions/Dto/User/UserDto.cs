@@ -1,4 +1,5 @@
 ﻿using UniMagContributions.Dto.Faculty;
+using UniMagContributions.Models;
 
 namespace UniMagContributions.Dto.User
 {
@@ -12,6 +13,7 @@ namespace UniMagContributions.Dto.User
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public string? ProfilePicture { get; set; }
+        public RoleDto? Role { get; set; }
         public FacultyDto? Faculty { get; set; }
     }
 }

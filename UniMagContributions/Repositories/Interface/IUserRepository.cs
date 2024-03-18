@@ -10,5 +10,7 @@ namespace UniMagContributions.Repositories.Interface
         User GetUserById(Guid id);
         void UpdateUser(User user);
         void DeleteUser(User user);
+        List<User> GetAllUser();
+        List<User> GetAllUserByRoleAndFaculty(string role, Guid facultyId);
     }
 }

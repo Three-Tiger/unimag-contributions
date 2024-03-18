@@ -104,7 +104,23 @@ namespace UniMagContributions.Controllers
             }
         }
 
-		[HttpDelete("contribution/{contributionId}")]
+        [HttpPost("contribution/download-multiple")]
+        public IActionResult DownloadMultipleFileByListContributionId(List<Guid> lstContributionId)
+        {
+            ResponseDto response = new();
+            try
+            {
+                FileContentResult result = _fileDetailServive.DownloadMultipleFileByListContributionId(lstContributionId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpDelete("contribution/{contributionId}")]
 		public IActionResult DeleteFileByContributionId(Guid contributionId)
 		{
             ResponseDto response = new();

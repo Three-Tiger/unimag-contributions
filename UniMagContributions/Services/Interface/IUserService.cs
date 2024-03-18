@@ -7,9 +7,10 @@ namespace UniMagContributions.Services.Interface
     {
         FileContentResult GetUserProfile(Guid id);
         UserDto GetUserById(Guid userId);
+        UserDto UpdateProfile(Guid id, UpdateUserDto updateUserDto);
         UserDto UpdateUser(Guid id, UpdateUserDto updateUserDto);
         string DeleteUser(Guid userId);
-        UserDto CreateUser(UserDto userDto);
+        UserDto CreateUser(CreateUserDto userDto);
         List<UserDto> GetAllUser();
         string ChangePassword(Guid userId, ChangePasswordDto changePasswordDto);
     }

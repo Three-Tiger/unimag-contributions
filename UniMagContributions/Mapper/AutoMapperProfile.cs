@@ -31,6 +31,7 @@ namespace UniMagContributions.Mapper
 
             CreateMap<FileDetails, FileDetailDto>();
             CreateMap<ImageDetails, ImageDetailDto>();
+            CreateMap<Role, RoleDto>();
 
             CreateMap<User, UserDto>();
             CreateMap<CreateUserDto, User>();
