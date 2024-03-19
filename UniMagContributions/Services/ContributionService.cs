@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Dto.Faculty;
 using UniMagContributions.Exceptions;
@@ -76,10 +77,29 @@ namespace UniMagContributions.Services
             return _mapper.Map<List<ContributionDto>>(contributionList);
         }
 
+        public List<ContributionDto> GetTop6Contribution()
+        {
+            List<Contribution> contributionList = _contributionRepository.GetTop6Contribution();
+            return _mapper.Map<List<ContributionDto>>(contributionList);
+        }
+
         public ContributionDto GetContributionById(Guid id)
         {
             Contribution contribution = _contributionRepository.GetContributionById(id) ?? throw new NotFoundException("Contribution does not exists"); ;
             return _mapper.Map<ContributionDto>(contribution);
+        }
+
+        public FileContentResult GetContributionPicture(Guid id)
+        {
+            Contribution contribution = _contributionRepository.GetContributionById(id) ?? throw new NotFoundException("Contribution does not exists");
+
+            if (contribution.ImageDetails.Count == 0)
+            {
+                throw new NotFoundException("Contribution does not have any picture");
+            }
+
+            List<ImageDetails> imageDetails = contribution.ImageDetails.ToList();
+            return _fileService.GetFile(imageDetails[0].ImagePath);
         }
 
         public List<ContributionDto> GetContributionByMagazineId(Guid annualManagazinId)

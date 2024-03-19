@@ -51,6 +51,24 @@ namespace UniMagContributions.Repositories
             }
         }
 
+        public List<Contribution> GetTop6Contribution()
+        {
+            try
+            {
+                return _context.Contributions
+                    .Include(u => u.User).ThenInclude(u => u.Faculty)
+                    .Include(f => f.FileDetails)
+                    .Include(i => i.ImageDetails)
+                    .OrderByDescending(c => c.SubmissionDate)
+                    .Take(6)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error getting Contribution");
+            }
+        }
+
         public List<Contribution> GetContributionByMagazineId(Guid annualManagazinId)
         {
             try

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using UniMagContributions.Dto;
@@ -29,6 +30,13 @@ namespace UniMagContributions.Controllers
             return Ok(contributions);
         }
 
+        [HttpGet("top-6")]
+        public IActionResult GetTop6()
+        {
+            List<ContributionDto> contributions = _contributionService.GetTop6Contribution();
+            return Ok(contributions);
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -37,6 +45,28 @@ namespace UniMagContributions.Controllers
             {
                 ContributionDto contributionDto = _contributionService.GetContributionById(id);
                 return Ok(contributionDto);
+            }
+            catch (NotFoundException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status404NotFound, response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{id}/image")]
+        public IActionResult GetContributionPicture(Guid id)
+        {
+            ResponseDto response = new();
+            try
+            {
+                FileContentResult file = _contributionService.GetContributionPicture(id);
+                return file;
             }
             catch (NotFoundException e)
             {
