@@ -1,4 +1,5 @@
-﻿using UniMagContributions.Dto.Contribution;
+﻿using Microsoft.AspNetCore.Mvc;
+using UniMagContributions.Dto.Contribution;
 
 namespace UniMagContributions.Services.Interface
 {
@@ -8,8 +9,10 @@ namespace UniMagContributions.Services.Interface
 		ContributionDto UpdateContribution(Guid id, UpdateContributionDto contributionDto);
 		string DeleteContribution(Guid id);
 		ContributionDto GetContributionById(Guid id);
-		List<ContributionDto> GetContributionByMagazineId(Guid annualManagazinId);
+		FileContentResult GetContributionPicture(Guid id);
+        List<ContributionDto> GetContributionByMagazineId(Guid annualManagazinId);
 		List<ContributionDto> GetAllContribution();
+		List<ContributionDto> GetTop6Contribution();
 		ContributionDto GetContributionByMagazineIdAndUserId(Guid annualManagazinId, Guid userId);
 
     }
