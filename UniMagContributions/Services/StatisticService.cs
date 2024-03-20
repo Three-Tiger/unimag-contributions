@@ -17,14 +17,19 @@ namespace UniMagContributions.Services
 			return _statisticsRepository.GetContributionsByFacultyAndAcademicYear(); ;
 		}
 
-		public Dictionary<string, Dictionary<string, int>> GetNumberOfContributorsByFacultyAndAcademicYear()
-		{
-			return _statisticsRepository.GetNumberOfContributorsByFacultyAndAcademicYear();
-		}
-
 		public Dictionary<string, Dictionary<string, double>> GetPercentageContributionsByFacultyAndAcademicYear()
 		{
 			return _statisticsRepository.GetPercentageContributionsByFacultyAndAcademicYear();
 		}
+
+		public Dictionary<string, double> GetAcceptanceRejectionRate()
+		{
+            return _statisticsRepository.GetAcceptanceRejectionRate();
+        }
+
+		public Dictionary<string, int> NumberOfAccountsCreated()
+		{
+            return _statisticsRepository.NumberOfAccountsCreated();
+        }
 	}
 }

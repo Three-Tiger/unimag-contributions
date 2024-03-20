@@ -17,6 +17,8 @@ namespace UniMagContributions.Models
 
 		public EStatus Status { get; set; }
 
+		public bool IsPublished { get; set; } = false;
+
 		public Guid UserId { get; set; }
 
 		public Guid AnnualMagazineId { get; set; }

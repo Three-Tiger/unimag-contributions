@@ -25,7 +25,7 @@ namespace UniMagContributions.Services
 			Feedback feedback = _mapper.Map<Feedback>(feedbackDto);
 			_feedbackRepository.CreateFeedback(feedback);
 
-			return _mapper.Map<FeedbackDto>(feedback);
+			return _mapper.Map<FeedbackDto>(_feedbackRepository.GetFeedbackById(feedback.FeedBackId));
 		}
 
 		public string DeleteFeedback(Guid id)

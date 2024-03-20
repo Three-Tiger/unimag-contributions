@@ -56,7 +56,11 @@ namespace UniMagContributions.Repositories
 		{
 			try
 			{
-				return _context.Feedbacks.Where(u => u.FeedBackId == id).AsNoTracking().FirstOrDefault();
+				return _context.Feedbacks
+					.Where(u => u.FeedBackId == id)
+					.AsNoTracking()
+					.Include(f => f.User)
+					.FirstOrDefault();
 			}
 			catch (Exception)
 			{

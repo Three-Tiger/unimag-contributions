@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniMagContributions.Models;
 
@@ -11,9 +12,10 @@ using UniMagContributions.Models;
 namespace UniMagContributions.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240319030835_AddNewGuestRole")]
+    partial class AddNewGuestRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +110,6 @@ namespace UniMagContributions.Migrations
 
                     b.Property<Guid>("AnnualMagazineId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -409,12 +408,12 @@ namespace UniMagContributions.Migrations
                         {
                             UserId = new Guid("86f04ea5-9421-42d0-bfde-e75a7b01dc3f"),
                             Address = "Admin Address",
-                            DateOfBirth = new DateTime(2024, 3, 19, 22, 39, 45, 882, DateTimeKind.Local).AddTicks(7707),
+                            DateOfBirth = new DateTime(2024, 3, 19, 10, 8, 35, 28, DateTimeKind.Local).AddTicks(3284),
                             Email = "admin@gmail.com",
                             FacultyId = new Guid("52b9ef2e-0e06-4443-8ec7-b008a0ffd30b"),
                             FirstName = "Admin",
                             LastName = "Admin",
-                            Password = "AQAAAAEAACcQAAAAEImbTTDmoZ4qRqMwyN/AaNhqEKgDYeGGLi0xaf2RXm307rPh7340WJ2uH5NuZU9QAA==",
+                            Password = "AQAAAAEAACcQAAAAEMcFyj7ejNEW02Egk90TSGU7srNzOQcyEBtshGPWAyJIWsdxuxWqNenSioFekVUtmg==",
                             PhoneNumber = "1234567890",
                             RoleId = new Guid("0d160f4d-3d44-4d73-b6d2-501b034d8dc6")
                         });

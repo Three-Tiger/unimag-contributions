@@ -4,6 +4,7 @@
 	{
 		Dictionary<string, Dictionary<string, int>> GetContributionsByFacultyAndAcademicYear();
 		Dictionary<string, Dictionary<string, double>> GetPercentageContributionsByFacultyAndAcademicYear();
-		public Dictionary<string, Dictionary<string, int>> GetNumberOfContributorsByFacultyAndAcademicYear();
+		Dictionary<string, double> GetAcceptanceRejectionRate();
+		Dictionary<string, int> NumberOfAccountsCreated();
 	}
 }

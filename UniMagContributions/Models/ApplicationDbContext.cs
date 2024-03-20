@@ -59,7 +59,8 @@ namespace UniMagContributions.Models
                 new Role { RoleId = new Guid("0D160F4D-3D44-4D73-B6D2-501B034D8DC6"), Name = ERole.Administrator.ToString() },
                 new Role { RoleId = new Guid("75AFCA28-6716-4A50-8CCB-EAC3DC2D5470"), Name = ERole.Manager.ToString() },
                 new Role { RoleId = new Guid("AD0762DD-F0CE-48D6-9A9E-D58D986AEC49"), Name = ERole.Coordinator.ToString() },
-                new Role { RoleId = new Guid("B57DAB76-301D-49D2-883A-15EF47C19630"), Name = ERole.Student.ToString() }
+                new Role { RoleId = new Guid("B57DAB76-301D-49D2-883A-15EF47C19630"), Name = ERole.Student.ToString() },
+                new Role { RoleId = new Guid("636E7B42-1831-44CB-8E6D-FA90B6076EDB"), Name = ERole.Guest.ToString() }
             );
 
             string adminPassword = "admin";

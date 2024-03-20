@@ -15,27 +15,32 @@ namespace UniMagContributions.Controllers
 			_statisticsService = statisticsService;
 		}
 
-
-		// GET api/<StatisticsController>/5
-		[HttpGet("1")]
+		[HttpGet("number-of-contributions")]
 		public IActionResult GetContributionsByFacultyAndAcademicYear()
 		{
 			var contributionsByFacultyAndAcademicYear = _statisticsService.GetContributionsByFacultyAndAcademicYear();
 			return Ok(contributionsByFacultyAndAcademicYear);
 		}
 
-		[HttpGet("2")]
+		[HttpGet("percentage-of-contributions")]
 		public IActionResult GetPercentageContributionsByFacultyAndAcademicYear()
 		{
 			var contributionsByFacultyAndAcademicYear = _statisticsService.GetPercentageContributionsByFacultyAndAcademicYear();
 			return Ok(contributionsByFacultyAndAcademicYear);
 		}
 
-		[HttpGet("3")]
-		public IActionResult GetNumberOfContributorsByFacultyAndAcademicYear()
-		{
-			var contributionsByFacultyAndAcademicYear = _statisticsService.GetNumberOfContributorsByFacultyAndAcademicYear();
-			return Ok(contributionsByFacultyAndAcademicYear);
-		}
-	}
+        [HttpGet("acceptance-rejection-rate")]
+        public IActionResult GetAcceptanceRejectionRate()
+        {
+            var getAcceptanceRejectionRate = _statisticsService.GetAcceptanceRejectionRate();
+            return Ok(getAcceptanceRejectionRate);
+        }
+
+        [HttpGet("number-of-accounts-created")]
+        public IActionResult NumberOfAccountsCreated()
+        {
+            var numberOfAccountsCreated = _statisticsService.NumberOfAccountsCreated();
+            return Ok(numberOfAccountsCreated);
+        }
+    }
 }
