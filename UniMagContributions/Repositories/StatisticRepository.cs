@@ -1,106 +1,132 @@
-﻿using UniMagContributions.Models;
+﻿using System.Linq;
+using UniMagContributions.Constraints;
+using UniMagContributions.Models;
 using UniMagContributions.Repositories.Interface;
 
 namespace UniMagContributions.Repositories
 {
-	public class StatisticRepository : IStatisticRepository
-	{
-		private readonly ApplicationDbContext _context;
+    public class StatisticRepository : IStatisticRepository
+    {
+        private readonly ApplicationDbContext _context;
 
-		public StatisticRepository(ApplicationDbContext context)
-		{
-			_context = context;
-		}
+        public StatisticRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-		public Dictionary<string, Dictionary<string, int>> GetContributionsByFacultyAndAcademicYear()
-		{
-			var contributionsByFacultyAndYear = _context.Contributions
-			.GroupBy(c => new { c.User.Faculty.Name, c.AnnualMagazine.AcademicYear })
-			.Select(g => new
-			{
-				Faculty = g.Key.Name,
-				AcademicYear = g.Key.AcademicYear,
-				Count = g.Count()
-			})
-			.ToList();
+        public Dictionary<string, Dictionary<string, int>> GetContributionsByFacultyAndAcademicYear()
+        {
+            var academicYears = _context.AnnualMagazines.OrderBy(a => a.FinalClosureDate).Select(a => a.AcademicYear).ToList();
+            var faculties = _context.Faculties.Where(f => f.Name != "Admin").Select(f => f.Name).Distinct().ToList();
 
-			var result = new Dictionary<string, Dictionary<string, int>>();
+            var result = new Dictionary<string, Dictionary<string, int>>();
 
-			foreach (var contribution in contributionsByFacultyAndYear)
-			{
-				if (!result.ContainsKey(contribution.Faculty))
-				{
-					result[contribution.Faculty] = new Dictionary<string, int>();
-				}
+            foreach (var academicYear in academicYears)
+            {
+                // Initialize a dictionary for the current academic year
+                result[academicYear] = new Dictionary<string, int>();
 
-				result[contribution.Faculty][contribution.AcademicYear] = contribution.Count;
-			}
+                // Get contributions for the current academic year
+                var contributionsByFacultyAndYear = _context.Contributions
+                    .Where(c => c.AnnualMagazine.AcademicYear == academicYear)
+                    .GroupBy(c => c.User.Faculty.Name)
+                    .Select(g => new
+                    {
+                        Faculty = g.Key,
+                        Count = g.Count()
+                    })
+                    .ToDictionary(c => c.Faculty, c => c.Count);
 
-			return result;
-		}
+                // Add contributions for faculties with 0 count
+                foreach (var faculty in faculties)
+                {
+                    int count = 0;
+                    if (contributionsByFacultyAndYear.ContainsKey(faculty))
+                        count = contributionsByFacultyAndYear[faculty];
+                    result[academicYear][faculty] = count;
+                }
+            }
 
-		public Dictionary<string, Dictionary<string, double>> GetPercentageContributionsByFacultyAndAcademicYear()
-		{
-			var academicYears = _context.AnnualMagazines.Select(a => a.AcademicYear).ToList();
+            return result;
+        }
 
-			var result = new Dictionary<string, Dictionary<string, double>>();
+        public Dictionary<string, Dictionary<string, double>> GetPercentageContributionsByFacultyAndAcademicYear()
+        {
+            var academicYears = _context.AnnualMagazines.OrderBy(a => a.FinalClosureDate).Select(a => a.AcademicYear).ToList();
 
-			foreach (var academicYear in academicYears)
-			{
-				var contributionsByFacultyAndYear = _context.Contributions
-					.Where(c => c.AnnualMagazine.AcademicYear == academicYear)
-					.GroupBy(c => c.User.Faculty.Name)
-					.Select(g => new
-					{
-						Faculty = g.Key,
-						Count = g.Count()
-					})
-					.ToList();
+            var result = new Dictionary<string, Dictionary<string, double>>();
 
-				var totalContributionsForYear = contributionsByFacultyAndYear.Sum(c => c.Count);
+            foreach (var academicYear in academicYears)
+            {
+                // Initialize dictionary for current academic year
+                result[academicYear] = new Dictionary<string, double>();
 
-				foreach (var contribution in contributionsByFacultyAndYear)
-				{
-					var percentage = (contribution.Count / (double)totalContributionsForYear) * 100;
+                // Get contributions for the current academic year
+                var contributionsByFacultyAndYear = _context.Contributions
+                    .Where(c => c.AnnualMagazine.AcademicYear == academicYear)
+                    .GroupBy(c => c.User.Faculty.Name)
+                    .Select(g => new
+                    {
+                        Faculty = g.Key,
+                        Count = g.Count()
+                    })
+                    .ToList();
 
-					if (!result.ContainsKey(contribution.Faculty))
-					{
-						result[contribution.Faculty] = new Dictionary<string, double>();
-					}
+                var totalContributionsForYear = contributionsByFacultyAndYear.Sum(c => c.Count);
 
-					result[contribution.Faculty][academicYear] = percentage;
-				}
-			}
+                foreach (var contribution in contributionsByFacultyAndYear)
+                {
+                    var percentage = totalContributionsForYear != 0 ? (contribution.Count / (double)totalContributionsForYear) * 100 : 0;
 
-			return result;
-		}
+                    // Populate the dictionary with faculty percentage contributions
+                    result[academicYear][contribution.Faculty] = Math.Round(percentage, 2);
+                }
 
-		public Dictionary<string, Dictionary<string, int>> GetNumberOfContributorsByFacultyAndAcademicYear()
-		{
-			var contributorsByFacultyAndYear = _context.Contributions
-				.GroupBy(c => new { c.User.Faculty.Name, c.AnnualMagazine.AcademicYear })
-				.Select(g => new
-				{
-					Faculty = g.Key.Name,
-					AcademicYear = g.Key.AcademicYear,
-					ContributorsCount = g.Select(c => c.UserId).Distinct().Count()
-				})
-				.ToList();
+                // Add faculties with 0 contributions
+                var faculties = _context.Faculties.Where(f => f.Name != "Admin").Select(f => f.Name).ToList();
+                foreach (var faculty in faculties)
+                {
+                    if (!result[academicYear].ContainsKey(faculty))
+                    {
+                        result[academicYear][faculty] = 0; // Set percentage to 0 for faculties with no contributions
+                    }
+                }
+            }
 
-			var result = new Dictionary<string, Dictionary<string, int>>();
+            return result;
+        }
 
-			foreach (var contributor in contributorsByFacultyAndYear)
-			{
-				if (!result.ContainsKey(contributor.Faculty))
-				{
-					result[contributor.Faculty] = new Dictionary<string, int>();
-				}
+        public Dictionary<string, double> GetAcceptanceRejectionRate()
+        {
+            var result = new Dictionary<string, double>();
 
-				result[contributor.Faculty][contributor.AcademicYear] = contributor.ContributorsCount;
-			}
+            var totalContributions = _context.Contributions.Count();
 
-			return result;
-		}
+            var waitingContributions = _context.Contributions.Where(c => c.Status == EStatus.Waiting).Count();
+            var acceptedContributions = _context.Contributions.Where(c => c.Status == EStatus.Approved).Count();
+            var rejectedContributions = _context.Contributions.Where(c => c.Status == EStatus.Rejected).Count();
 
-	}
+            result["Waiting"] = Math.Round((waitingContributions / (double)totalContributions) * 100, 2);
+            result["Accepted"] = Math.Round((acceptedContributions / (double)totalContributions) * 100, 2);
+            result["Rejected"] = Math.Round((rejectedContributions / (double)totalContributions) * 100, 2);
+
+            return result;
+        }
+
+        public Dictionary<string, int> NumberOfAccountsCreated()
+        {
+            var result = new Dictionary<string, int>();
+
+            var roles = _context.Roles.Select(r => r.Name).ToList();
+            var totalAccounts = _context.Users.Count();
+
+            foreach (var item in roles)
+            {
+                var user = _context.Users.Where(u => u.Role.Name == item);
+                result[item] = user.Count();
+            }
+
+            return result;
+        }
+    }
 }

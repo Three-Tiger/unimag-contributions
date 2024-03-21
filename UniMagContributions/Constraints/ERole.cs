@@ -6,5 +6,6 @@
         Manager,
         Coordinator,
         Student,
+        Guest,
     }
 }
