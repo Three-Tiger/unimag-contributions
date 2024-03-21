@@ -19,7 +19,9 @@ namespace UniMagContributions.Dto.Contribution
 
 		public string Status { get; set; }
 
-		public UserDto? User { get; set; }
+        public bool IsPublished { get; set; }
+
+        public UserDto? User { get; set; }
 
 		public AnnualMagazineDto? AnnualMagazine { get; set; }
 

@@ -13,7 +13,8 @@ namespace UniMagContributions.Services.Interface
         List<ContributionDto> GetContributionByMagazineId(Guid annualManagazinId);
 		List<ContributionDto> GetAllContribution();
 		List<ContributionDto> GetTop6Contribution();
+		List<ContributionDto> GetContributionIsPublished(int limit);
 		ContributionDto GetContributionByMagazineIdAndUserId(Guid annualManagazinId, Guid userId);
-
+		List<ContributionDto> GetContributionByUserId(Guid userId);
     }
 }

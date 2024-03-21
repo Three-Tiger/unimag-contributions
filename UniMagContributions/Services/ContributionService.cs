@@ -16,13 +16,15 @@ namespace UniMagContributions.Services
         private readonly IFileService _fileService;
         private readonly IContributionRepository _contributionRepository;
         private readonly IAnnualMagazineRepository _annualMagazineRepository;
+        private readonly IFeedbackRepository _feedbackRepository;
 
-        public ContributionService(IMapper mapper, IContributionRepository contributionRepository, IAnnualMagazineRepository annualMagazineRepository, IFileService fileService)
+        public ContributionService(IMapper mapper, IContributionRepository contributionRepository, IAnnualMagazineRepository annualMagazineRepository, IFileService fileService, IFeedbackRepository feedbackRepository)
         {
             _mapper = mapper;
             _contributionRepository = contributionRepository;
             _annualMagazineRepository = annualMagazineRepository;
             _fileService = fileService;
+            _feedbackRepository = feedbackRepository;
         }
 
         public ContributionDto AddContribution(CreateContributionDto contributionDto)
@@ -66,6 +68,11 @@ namespace UniMagContributions.Services
                 }
             }
 
+            foreach (var feedback in contribution.Feedbacks)
+            {
+                _feedbackRepository.DeleteFeedback(feedback);
+            }
+
             _contributionRepository.DeleteContribution(contribution);
 
             return "Delete successful";
@@ -80,6 +87,12 @@ namespace UniMagContributions.Services
         public List<ContributionDto> GetTop6Contribution()
         {
             List<Contribution> contributionList = _contributionRepository.GetTop6Contribution();
+            return _mapper.Map<List<ContributionDto>>(contributionList);
+        }
+
+        public List<ContributionDto> GetContributionIsPublished(int limit)
+        {
+            List<Contribution> contributionList = _contributionRepository.GetContributionIsPublished(limit);
             return _mapper.Map<List<ContributionDto>>(contributionList);
         }
 
@@ -133,6 +146,12 @@ namespace UniMagContributions.Services
 
             Contribution result = _contributionRepository.GetContributionById(isContributionExist.ContributionId);
             return _mapper.Map<ContributionDto>(result);
+        }
+
+        public List<ContributionDto> GetContributionByUserId(Guid userId)
+        {
+            List<Contribution> contributionList = _contributionRepository.GetContributionByUserId(userId);
+            return _mapper.Map<List<ContributionDto>>(contributionList);
         }
     }
 }

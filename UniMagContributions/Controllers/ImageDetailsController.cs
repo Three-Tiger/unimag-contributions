@@ -81,10 +81,10 @@ namespace UniMagContributions.Controllers
                 response.Message = _imageDetailService.AddMultipleImageDetail(imageDetails);
                 return Ok(response);
             }
-            catch (ConflictException e)
+            catch (InvalidException e)
             {
                 response.Message = e.Message;
-                return StatusCode(StatusCodes.Status409Conflict, response);
+                return StatusCode(StatusCodes.Status400BadRequest, response);
             }
             catch (Exception e)
             {

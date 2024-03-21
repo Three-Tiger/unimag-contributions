@@ -48,7 +48,7 @@ namespace UniMagContributions.Services
             {
                 ".pdf" => EFileType.PDF,
                 ".docx" => EFileType.DOCX,
-                _ => EFileType.PDF,
+                _ => EFileType.DOCX,
             };
         }
 
@@ -56,6 +56,12 @@ namespace UniMagContributions.Services
         {
             FileDetails fileDetails = _fileDetailRepository.GetFileDetailById(id);
             return _fileService.DownloadFileById(fileDetails);
+        }
+
+        public FileContentResult ReadFileById(Guid id)
+        {
+            FileDetails fileDetails = _fileDetailRepository.GetFileDetailById(id);
+            return _fileService.ReadFileById(fileDetails);
         }
 
         public string DeleteFileDetail(Guid id)
@@ -80,35 +86,34 @@ namespace UniMagContributions.Services
 
         public string AddMultipleFileDetail(List<CreateaFileDetailsDto> FileDetailDto)
         {
-            try
+            var listFileDetails = new List<FileDetails>();
+            foreach (var fileDetailsDto in FileDetailDto)
             {
-                foreach (var fileDetailsDto in FileDetailDto)
+                var result = _fileService.SaveFile(fileDetailsDto.FileUpload, EFolder.ContributionFile);
+
+                // if it is not right format
+                if (result.Item1 == 0)
                 {
-                    var result = _fileService.SaveFile(fileDetailsDto.FileUpload, EFolder.ContributionFile);
-
-                    // if it is not right format
-                    if (result.Item1 == 0)
-                    {
-                        throw new InvalidException(result.Item2);
-                    }
-
-                    var fileDetails = new FileDetails()
-                    {
-                        FileName = fileDetailsDto.FileUpload.FileName,
-                        FilePath = result.Item2,
-                        FileType = GetFileType(fileDetailsDto.FileUpload.FileName),
-                        ContributionId = fileDetailsDto.ContributionId,
-                    };
-
-                    _fileDetailRepository.CreateFileDetail(fileDetails);
+                    throw new InvalidException(result.Item2);
                 }
 
-                return "Upload Success!";
+                var fileDetails = new FileDetails()
+                {
+                    FileName = fileDetailsDto.FileUpload.FileName,
+                    FilePath = result.Item2,
+                    FileType = GetFileType(fileDetailsDto.FileUpload.FileName),
+                    ContributionId = fileDetailsDto.ContributionId,
+                };
+
+                listFileDetails.Add(fileDetails);
             }
-            catch (Exception ex)
+
+            foreach (var item in listFileDetails)
             {
-                throw new Exception("Failed to upload files.", ex);
+                _fileDetailRepository.CreateFileDetail(item);
             }
+
+            return "Upload Success!";
         }
 
         public FileContentResult DownloadMultipleFile(Guid contributionId)

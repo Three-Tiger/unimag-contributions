@@ -33,7 +33,7 @@ namespace UniMagContributions.Services
 
                 // Check the allowed extenstions
                 string ext = Path.GetExtension(file.FileName);
-                string[] allowedExtensions = new string[] { ".jpg", ".png", ".jpeg", ".pdf", ".docx", ".zip", ".rar" };
+                string[] allowedExtensions = new string[] { ".jpg", ".png", ".jpeg", ".docx" };
 
                 if (!allowedExtensions.Contains(ext))
                 {
@@ -135,6 +135,33 @@ namespace UniMagContributions.Services
 
                     // Return the file content as a FileContentResult
                     return new FileContentResult(memoryStream.ToArray(), "application/octet-stream")
+                    {
+                        FileDownloadName = fileDetails.FileName
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public FileContentResult ReadFileById(FileDetails fileDetails)
+        {
+            try
+            {
+                string wwwPath = this.environment.WebRootPath;
+                var file = Path.Combine(wwwPath, fileDetails.FilePath);
+
+                // Read the file content into a memory stream
+                using (var fileStream = new FileStream(file, FileMode.Open))
+                {
+                    var memoryStream = new MemoryStream();
+                    fileStream.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+
+                    // Return the file content as a FileContentResult
+                    return new FileContentResult(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
                     {
                         FileDownloadName = fileDetails.FileName
                     };
