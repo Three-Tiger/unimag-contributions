@@ -9,7 +9,9 @@ namespace UniMagContributions.Repositories.Interface
 		Contribution GetContributionById(Guid id);
 		List<Contribution> GetAllContribution();
 		List<Contribution> GetTop6Contribution();
+		List<Contribution> GetContributionIsPublished(int limit);
 		List<Contribution> GetContributionByMagazineId(Guid annualManagazinId);
+		List<Contribution> GetContributionByUserId(Guid userId);
 		void UpdateContribution(Contribution contribution);
 		void DeleteContribution(Contribution contribution);
 		Contribution IsContributionExist(Guid userId, Guid annualMagazineId);

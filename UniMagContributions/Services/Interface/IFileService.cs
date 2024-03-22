@@ -17,6 +17,8 @@ namespace UniMagContributions.Services.Interface
 
         FileContentResult DownloadFileById(FileDetails fileDetails);
 
+        FileContentResult ReadFileById(FileDetails fileDetails);
+
         FileContentResult DownloadFileById(ImageDetails imageDetails);
 
         FileContentResult DownloadMultipleFile(List<FileDetails> fileDetails, EFolder folderName);

@@ -1,21 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
-using UniMagContributions.Dto.Faculty;
 using UniMagContributions.Dto.FileDetails;
 using UniMagContributions.Exceptions;
-using UniMagContributions.Models;
-using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
     [Route("api/file-details")]
 	[ApiController]
-	public class FilesController : ControllerBase
+	public class FileDetailsController : ControllerBase
 	{
 		private readonly IFileDetailServive _fileDetailServive;
 
-		public FilesController(IFileDetailServive fileDetailServive)
+		public FileDetailsController(IFileDetailServive fileDetailServive)
 		{
 			_fileDetailServive = fileDetailServive;
 		}
@@ -60,10 +57,10 @@ namespace UniMagContributions.Controllers
 				response.Message = _fileDetailServive.AddMultipleFileDetail(fileDetails);
 				return Ok(response);
 			}
-			catch (ConflictException e)
+			catch (InvalidException e)
 			{
 				response.Message = e.Message;
-				return StatusCode(StatusCodes.Status409Conflict, response);
+				return StatusCode(StatusCodes.Status400BadRequest, response);
 			}
 			catch (Exception e)
 			{
@@ -87,6 +84,22 @@ namespace UniMagContributions.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, response);
 			}
 		}
+
+        [HttpGet("{id}/read")]
+        public IActionResult ReadFile(Guid id)
+        {
+            ResponseDto response = new();
+            try
+            {
+                FileContentResult result = _fileDetailServive.ReadFileById(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
 
         [HttpGet("{contributionId}/download-multiple")]
         public IActionResult DownloadMultipleFile(Guid contributionId)

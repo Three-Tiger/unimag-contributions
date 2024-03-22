@@ -69,6 +69,38 @@ namespace UniMagContributions.Repositories
             }
         }
 
+        public List<Contribution> GetContributionIsPublished(int limit)
+        {
+            try
+            {
+                if (limit == 0)
+                {
+                    return _context.Contributions
+                    .Include(u => u.User).ThenInclude(u => u.Faculty)
+                    .Include(f => f.FileDetails)
+                    .Include(i => i.ImageDetails)
+                    .Where(u => u.IsPublished == true)
+                    .OrderByDescending(c => c.SubmissionDate)
+                    .ToList();
+                }
+                else
+                {
+                    return _context.Contributions
+                    .Include(u => u.User).ThenInclude(u => u.Faculty)
+                    .Include(f => f.FileDetails)
+                    .Include(i => i.ImageDetails)
+                    .Where(u => u.IsPublished == true)
+                    .OrderByDescending(c => c.SubmissionDate)
+                    .Take(limit)
+                    .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error getting Contribution");
+            }
+        }
+
         public List<Contribution> GetContributionByMagazineId(Guid annualManagazinId)
         {
             try
@@ -87,6 +119,25 @@ namespace UniMagContributions.Repositories
             }
         }
 
+        public List<Contribution> GetContributionByUserId(Guid userId)
+        {
+            try
+            {
+                return _context.Contributions
+                    .Include(u => u.User).ThenInclude(u => u.Faculty)
+                    .Include(f => f.FileDetails)
+                    .Include(i => i.ImageDetails)
+                    .Include(a => a.AnnualMagazine)
+                    .Where(u => u.UserId == userId)
+                    .OrderByDescending(c => c.SubmissionDate)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error getting Contribution");
+            }
+        }
+
         public Contribution GetContributionById(Guid id)
         {
             try
@@ -96,6 +147,7 @@ namespace UniMagContributions.Repositories
                     .Include(f => f.FileDetails)
                     .Include(i => i.ImageDetails)
                     .Include(f => f.Feedbacks).ThenInclude(u => u.User)
+                    .Include(a => a.AnnualMagazine)
                     .Where(u => u.ContributionId == id)
                     .AsNoTracking()
                     .FirstOrDefault();

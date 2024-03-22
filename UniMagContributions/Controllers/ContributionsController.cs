@@ -37,6 +37,13 @@ namespace UniMagContributions.Controllers
             return Ok(contributions);
         }
 
+        [HttpGet("published")]
+        public IActionResult GetContributionIsPublished(int limit)
+        {
+            List<ContributionDto> contributions = _contributionService.GetContributionIsPublished(limit);
+            return Ok(contributions);
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -122,6 +129,26 @@ namespace UniMagContributions.Controllers
             }
         }
 
+        [HttpGet("user/{userId}")]
+        public IActionResult GetContrubutionByUserId(Guid userId)
+        {
+            ResponseDto response = new();
+            try
+            {
+                List<ContributionDto> contributions = _contributionService.GetContributionByUserId(userId);
+                return Ok(contributions);
+            }
+            catch (NotFoundException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status404NotFound, response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
 
         [HttpPost]
         public IActionResult Post([FromBody] CreateContributionDto createContributionDto)

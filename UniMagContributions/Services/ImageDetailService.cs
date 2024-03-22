@@ -57,34 +57,33 @@ namespace UniMagContributions.Services
 
         public string AddMultipleImageDetail(List<CreateImageDetailDto> imageDetailDtos)
         {
-            try
+            var listImageDetails = new List<ImageDetails>();
+            foreach (var imageDetailDto in imageDetailDtos)
             {
-                foreach (var imageDetailDto in imageDetailDtos)
+                var result = _fileService.SaveFile(imageDetailDto.FileUpload, EFolder.ContributionImage);
+
+                // if it is not right format
+                if (result.Item1 == 0)
                 {
-                    var result = _fileService.SaveFile(imageDetailDto.FileUpload, EFolder.ContributionImage);
-
-                    // if it is not right format
-                    if (result.Item1 == 0)
-                    {
-                        throw new InvalidException(result.Item2);
-                    }
-
-                    var imageDetail = new ImageDetails()
-                    {
-                        ImageName = imageDetailDto.FileUpload.FileName,
-                        ImagePath = result.Item2,
-                        ContributionId = imageDetailDto.ContributionId,
-                    };
-
-                    _imageDetailRepository.CreateImageDetail(imageDetail);
+                    throw new InvalidException(result.Item2);
                 }
 
-                return "Upload Success!";
+                var imageDetail = new ImageDetails()
+                {
+                    ImageName = imageDetailDto.FileUpload.FileName,
+                    ImagePath = result.Item2,
+                    ContributionId = imageDetailDto.ContributionId,
+                };
+
+                listImageDetails.Add(imageDetail);
             }
-            catch (Exception ex)
+
+            foreach (var item in listImageDetails)
             {
-                throw new Exception("Failed to upload files.", ex);
+                _imageDetailRepository.CreateImageDetail(item);
             }
+
+            return "Upload Success!";
         }
 
         public FileContentResult DownloadFileById(Guid id)

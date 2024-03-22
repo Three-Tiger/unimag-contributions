@@ -14,7 +14,9 @@ namespace UniMagContributions.Dto.Contribution
 		[Required(ErrorMessage = "The Status can not empty!")]
 		public string Status { get; set; }
 
-		public Guid UserId { get; set; }
+        public bool IsPublished { get; set; } = false;
+
+        public Guid UserId { get; set; }
 
 		public Guid AnnualMagazineId { get; set; }
 	}
