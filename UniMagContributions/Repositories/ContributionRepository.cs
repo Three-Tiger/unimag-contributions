@@ -85,7 +85,7 @@ namespace UniMagContributions.Repositories
             }
         }
 
-        public List<Contribution> GetContributionByMagazineId(Guid annualManagazinId)
+        public List<Contribution> GetContributionByMagazineIdAndFacultyId(Guid annualManagazinId, Guid facultyId)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace UniMagContributions.Repositories
                     .Include(u => u.User).ThenInclude(u => u.Faculty)
                     .Include(f => f.FileDetails)
                     .Include(a => a.ImageDetails)
-                    .Where(u => u.AnnualMagazineId == annualManagazinId)
+                    .Where(u => u.AnnualMagazineId == annualManagazinId && u.User.FacultyId == facultyId)
                     .OrderByDescending(c => c.SubmissionDate)
                     .ToList();
             }

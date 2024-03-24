@@ -103,6 +103,11 @@ namespace UniMagContributions.Repositories
 
             var totalContributions = _context.Contributions.Count();
 
+            if (totalContributions == 0)
+            {
+                totalContributions = 1;
+            }
+
             var waitingContributions = _context.Contributions.Where(c => c.Status == EStatus.Waiting).Count();
             var acceptedContributions = _context.Contributions.Where(c => c.Status == EStatus.Approved).Count();
             var rejectedContributions = _context.Contributions.Where(c => c.Status == EStatus.Rejected).Count();
