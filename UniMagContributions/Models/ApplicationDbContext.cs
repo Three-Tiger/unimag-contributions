@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using UniMagContributions.Constraints;
 using UniMagContributions.Repositories.Interface;
 
@@ -9,6 +11,20 @@ namespace UniMagContributions.Models
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+            try
+            {
+                if (Database.GetService<IDatabaseCreator>() is RelationalDatabaseCreator databaseCreator)
+                {
+                    if (!databaseCreator.CanConnect())
+                    {
+                        databaseCreator.Create();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public ApplicationDbContext()

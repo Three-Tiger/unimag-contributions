@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  test-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: unless-stopped
+    environment:
+      SA_PASSWORD: "ThreeTiger@2024"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "5000:1433"
+    volumes:
+      - sql-server-data-test:/var/opt/mssql
+    networks:
+      - unimag-network
+
   sql-server:
     image: mcr.microsoft.com/mssql/server:2019-latest
     restart: unless-stopped
@@ -38,6 +52,7 @@ services:
 
 volumes:
   sql-server-data:
+  sql-server-data-test:
 
 networks:
   unimag-network:
