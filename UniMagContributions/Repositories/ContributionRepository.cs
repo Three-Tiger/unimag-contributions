@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
+using UniMagContributions.Constraints;
+using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories.Interface;
 
@@ -51,24 +53,6 @@ namespace UniMagContributions.Repositories
             }
         }
 
-        public List<Contribution> GetTop6Contribution()
-        {
-            try
-            {
-                return _context.Contributions
-                    .Include(u => u.User).ThenInclude(u => u.Faculty)
-                    .Include(f => f.FileDetails)
-                    .Include(i => i.ImageDetails)
-                    .OrderByDescending(c => c.SubmissionDate)
-                    .Take(6)
-                    .ToList();
-            }
-            catch (Exception)
-            {
-                throw new Exception("Error getting Contribution");
-            }
-        }
-
         public List<Contribution> GetContributionIsPublished(int limit)
         {
             try
@@ -112,6 +96,41 @@ namespace UniMagContributions.Repositories
                     .Where(u => u.AnnualMagazineId == annualManagazinId)
                     .OrderByDescending(c => c.SubmissionDate)
                     .ToList();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error getting Contribution");
+            }
+        }
+
+        public List<Contribution> GetContributionByFilter(FilterDto filterDto)
+        {
+            try
+            {
+                var query = _context.Contributions
+                    .Include(u => u.User).ThenInclude(u => u.Faculty)
+                    .Include(f => f.FileDetails)
+                    .Include(i => i.ImageDetails)
+                    .Include(a => a.AnnualMagazine)
+                    .OrderByDescending(c => c.SubmissionDate)
+                    .AsQueryable();
+
+                if (filterDto.AnnualMagazineId.HasValue)
+                {
+                    query = query.Where(u => u.AnnualMagazineId == filterDto.AnnualMagazineId);
+                }
+
+                if (filterDto.Status.HasValue)
+                {
+                    query = query.Where(u => u.Status == filterDto.Status);
+                }
+
+                if (filterDto.IsPublished.HasValue)
+                {
+                    query = query.Where(u => u.IsPublished == filterDto.IsPublished);
+                }
+
+                return query.ToList();
             }
             catch (Exception)
             {

@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using UniMagContributions.Dto;
 using UniMagContributions.Dto.Contribution;
-using UniMagContributions.Dto.Faculty;
 using UniMagContributions.Exceptions;
-using UniMagContributions.Models;
-using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
+    [Authorize(Roles = "Guest, Student, Coordinator, Manager")]
     [Route("api/contributions")]
     [ApiController]
     public class ContributionsController : ControllerBase
@@ -30,13 +26,7 @@ namespace UniMagContributions.Controllers
             return Ok(contributions);
         }
 
-        [HttpGet("top-6")]
-        public IActionResult GetTop6()
-        {
-            List<ContributionDto> contributions = _contributionService.GetTop6Contribution();
-            return Ok(contributions);
-        }
-
+        [AllowAnonymous]
         [HttpGet("published")]
         public IActionResult GetContributionIsPublished(int limit)
         {
@@ -94,6 +84,27 @@ namespace UniMagContributions.Controllers
             try
             {
                 List<ContributionDto> contributions = _contributionService.GetContributionByMagazineId(annualManagazinId);
+                return Ok(contributions);
+            }
+            catch (NotFoundException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status404NotFound, response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpGet("filter")]
+        public IActionResult GetContrubutionByFilter([FromQuery] FilterDto filterDto)
+        {
+            ResponseDto response = new();
+            try
+            {
+                List<ContributionDto> contributions = _contributionService.GetContributionByFilter(filterDto);
                 return Ok(contributions);
             }
             catch (NotFoundException e)

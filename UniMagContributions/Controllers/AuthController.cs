@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
 using UniMagContributions.Dto.Auth;
 using UniMagContributions.Exceptions;

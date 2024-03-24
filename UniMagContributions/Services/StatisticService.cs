@@ -1,14 +1,20 @@
-﻿using UniMagContributions.Repositories.Interface;
+﻿using AutoMapper;
+using UniMagContributions.Dto.Contribution;
+using UniMagContributions.Models;
+using UniMagContributions.Repositories;
+using UniMagContributions.Repositories.Interface;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Services
 {
 	public class StatisticService : IStatisticService
 	{
-		private readonly IStatisticRepository _statisticsRepository;
+        private readonly IMapper _mapper;
+        private readonly IStatisticRepository _statisticsRepository;
 
-		public StatisticService(IStatisticRepository statisticsRepository)
+		public StatisticService(IMapper mapper, IStatisticRepository statisticsRepository)
 		{
+			_mapper = mapper;
 			_statisticsRepository = statisticsRepository;
 		}
 
@@ -31,5 +37,11 @@ namespace UniMagContributions.Services
 		{
             return _statisticsRepository.NumberOfAccountsCreated();
         }
-	}
+
+        public List<ContributionDto> GetTop6Contribution()
+        {
+            List<Contribution> contributionList = _statisticsRepository.GetTop6Contribution();
+            return _mapper.Map<List<ContributionDto>>(contributionList);
+        }
+    }
 }

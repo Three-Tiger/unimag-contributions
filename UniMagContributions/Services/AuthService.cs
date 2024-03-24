@@ -22,16 +22,14 @@ namespace UniMagContributions.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IFileService _fileService;
-        private readonly IConfiguration _configuration;
 
-        public AuthService(IMapper mapper, IUserRepository userRepository, IRoleRepository roleRepository, IFileService fileService, IConfiguration configuration)
+        public AuthService(IMapper mapper, IUserRepository userRepository, IRoleRepository roleRepository, IFileService fileService)
 
         {
             _mapper = mapper;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _fileService = fileService;
-            _configuration = configuration;
         }
 
         public string Register(RegisterDto registerDto)
@@ -85,12 +83,12 @@ namespace UniMagContributions.Services
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-            TimeSpan tokenLifeTime = TimeSpan.FromMinutes(Convert.ToDouble(_configuration["Jwt:TokenLifeTime"]));
+            var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"));
+            TimeSpan tokenLifeTime = TimeSpan.FromMinutes(Convert.ToDouble(Environment.GetEnvironmentVariable("JWT_TOKEN_LIFE_TIME")));
 
             var claims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+                new(JwtRegisteredClaimNames.Sub, Environment.GetEnvironmentVariable("JWT_SUBJECT")),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new("userId", user.UserId.ToString()),
@@ -101,8 +99,8 @@ namespace UniMagContributions.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(tokenLifeTime),
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
+                Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

@@ -1,4 +1,6 @@
-﻿using UniMagContributions.Models;
+﻿using UniMagContributions.Constraints;
+using UniMagContributions.Dto.Contribution;
+using UniMagContributions.Models;
 
 namespace UniMagContributions.Repositories.Interface
 {
@@ -8,9 +10,9 @@ namespace UniMagContributions.Repositories.Interface
 		Contribution GetContributionByTitle(string title);
 		Contribution GetContributionById(Guid id);
 		List<Contribution> GetAllContribution();
-		List<Contribution> GetTop6Contribution();
 		List<Contribution> GetContributionIsPublished(int limit);
 		List<Contribution> GetContributionByMagazineId(Guid annualManagazinId);
+		List<Contribution> GetContributionByFilter(FilterDto filterDto);
 		List<Contribution> GetContributionByUserId(Guid userId);
 		void UpdateContribution(Contribution contribution);
 		void DeleteContribution(Contribution contribution);

@@ -22,7 +22,6 @@ namespace UniMagContributions.Models
         public DbSet<Contribution> Contributions { get; set; }
         public DbSet<FileDetails> FileDetails { get; set; }
         public DbSet<ImageDetails> ImageDetails { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
 
 
@@ -42,18 +41,6 @@ namespace UniMagContributions.Models
                 .HasForeignKey(u => u.ContributionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Notification>()
-                .HasOne(u => u.User)
-                .WithMany(fb => fb.Notifications)
-                .HasForeignKey(u => u.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Notification>()
-                .HasOne(u => u.Contribution)
-                .WithMany(fb => fb.Notifications)
-                .HasForeignKey(u => u.ContributionId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             // Seed Roles
             modelBuilder.Entity<Role>().HasData(
                 new Role { RoleId = new Guid("0D160F4D-3D44-4D73-B6D2-501B034D8DC6"), Name = ERole.Administrator.ToString() },
@@ -63,7 +50,7 @@ namespace UniMagContributions.Models
                 new Role { RoleId = new Guid("636E7B42-1831-44CB-8E6D-FA90B6076EDB"), Name = ERole.Guest.ToString() }
             );
 
-            string adminPassword = "admin";
+            string adminPassword = "ThreeTiger@2024";
             PasswordHasher<string> passwordHasher = new();
             string password = passwordHasher.HashPassword(null, adminPassword);
 
@@ -77,7 +64,7 @@ namespace UniMagContributions.Models
                     Password = password,
                     FirstName = "Admin",
                     LastName = "Admin",
-                    DateOfBirth = DateTime.Now,
+                    DateOfBirth = new DateTime(2002, 8, 5),
                     Address = "Admin Address",
                     PhoneNumber = "1234567890",
                     RoleId = new Guid("0D160F4D-3D44-4D73-B6D2-501B034D8DC6")
@@ -138,8 +125,8 @@ namespace UniMagContributions.Models
                     AcademicYear = "2018-2019",
                     Title = "Effect of Using Mobile Phone",
                     Description = "The use of mobile phones has various effects on individuals and society. While they provide convenience and connectivity, overuse can lead to negative impacts such as decreased attention spans, disrupted sleep patterns, and increased risk of accidents due to distracted driving. Additionally, the production and disposal of mobile phones contribute to environmental pollution through the extraction of raw materials, energy consumption during manufacturing, and electronic waste generation.",
-                    ClosureDate = new DateTime(2019, 5, 1),
-                    FinalClosureDate = new DateTime(2019, 6, 30)
+                    ClosureDate = new DateTime(2019, 5, 1, 23, 59, 0),
+                    FinalClosureDate = new DateTime(2019, 6, 30, 23, 59, 0)
                 },
                 new AnnualMagazine
                 {
@@ -147,8 +134,8 @@ namespace UniMagContributions.Models
                     AcademicYear = "2019-2020",
                     Title = "Environmental pollution and its consequences",
                     Description = "Environmental pollution refers to the contamination of the natural environment by harmful substances, resulting in adverse effects on ecosystems, human health, and biodiversity. Pollution sources include industrial activities, transportation, agriculture, and improper waste disposal. Consequences of pollution include air and water quality degradation, soil contamination, climate change, and negative impacts on wildlife and human populations.",
-                    ClosureDate = new DateTime(2020, 5, 1),
-                    FinalClosureDate = new DateTime(2020, 6, 30)
+                    ClosureDate = new DateTime(2020, 5, 1, 23, 59, 0),
+                    FinalClosureDate = new DateTime(2020, 6, 30, 23, 59, 0)
                 },
                 new AnnualMagazine
                 {
@@ -156,8 +143,8 @@ namespace UniMagContributions.Models
                     AcademicYear = "2020-2021",
                     Title = "The impact of social media on society",
                     Description = "Social media platforms have profoundly influenced modern society by changing communication patterns, social interactions, and information dissemination. While they facilitate connectivity and access to diverse perspectives, social media also raise concerns about privacy, mental health, and the spread of misinformation. The addictive nature of social media usage can lead to decreased productivity and increased feelings of loneliness and depression among users.",
-                    ClosureDate = new DateTime(2021, 5, 1),
-                    FinalClosureDate = new DateTime(2021, 6, 30)
+                    ClosureDate = new DateTime(2021, 5, 1, 23, 59, 0),
+                    FinalClosureDate = new DateTime(2021, 6, 30, 23, 59, 0)
                 },
                 new AnnualMagazine
                 {
@@ -165,8 +152,8 @@ namespace UniMagContributions.Models
                     AcademicYear = "2021-2022",
                     Title = "Should we beat children to educate them or not?",
                     Description = "The practice of physically disciplining children, such as spanking or corporal punishment, remains a contentious issue. While some argue that it can be an effective way to discipline and teach obedience, others advocate for non-violent forms of discipline that focus on positive reinforcement and communication. Research suggests that physical punishment can have negative long-term effects on children's mental health and behavior, leading to aggression, low self-esteem, and increased likelihood of engaging in violent behavior.",
-                    ClosureDate = new DateTime(2022, 5, 1),
-                    FinalClosureDate = new DateTime(2022, 6, 30)
+                    ClosureDate = new DateTime(2022, 5, 1, 23, 59, 0),
+                    FinalClosureDate = new DateTime(2022, 6, 30, 23, 59, 0)
                 },
                 new AnnualMagazine
                 {
@@ -174,8 +161,8 @@ namespace UniMagContributions.Models
                     AcademicYear = "2022-2023",
                     Title = "Blockchain application in supply chain management",
                     Description = "Blockchain technology offers innovative solutions to enhance transparency, traceability, and efficiency in supply chain management. By creating a decentralized and immutable ledger of transactions, blockchain enables secure and verifiable recording of supply chain activities, including sourcing, production, transportation, and delivery. This technology can help mitigate risks such as counterfeiting, fraud, and supply chain disruptions while improving trust among stakeholders and ensuring ethical practices.",
-                    ClosureDate = new DateTime(2023, 5, 1),
-                    FinalClosureDate = new DateTime(2023, 6, 30)
+                    ClosureDate = new DateTime(2023, 5, 1, 23, 59, 0),
+                    FinalClosureDate = new DateTime(2023, 6, 30, 23, 59, 0)
                 }
             );
         }

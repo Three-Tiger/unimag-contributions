@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
 using UniMagContributions.Dto.FileDetails;
 using UniMagContributions.Exceptions;
@@ -6,6 +7,7 @@ using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
+    [Authorize]
     [Route("api/file-details")]
 	[ApiController]
 	public class FileDetailsController : ControllerBase

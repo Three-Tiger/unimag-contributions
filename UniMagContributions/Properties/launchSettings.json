@@ -5,7 +5,22 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_HOST": "localhost",
+        "DB_PORT": "1433",
+        "DB_USER": "sa",
+        "DB_PASSWORD": "ThreeTiger@2024",
+        "DB_NAME": "uni_mag_contributions_db",
+        "JWT_KEY": "thisismysecretthisismysecretthisismysecret",
+        "JWT_ISSUER": "authenticationserver",
+        "JWT_AUDIENCE": "client",
+        "JWT_SUBJECT": "accessToken",
+        "JWT_TOKEN_LIFE_TIME": "60",
+        "EMAIL_HOST": "smtp.mailtrap.io",
+        "EMAIL_PORT": "2525",
+        "EMAIL_FROM": "no-reply@unimag.com",
+        "EMAIL_USERNAME": "70b91342c97011",
+        "EMAIL_PASSWORD": "b6884669a02f77"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7135;http://localhost:5287"

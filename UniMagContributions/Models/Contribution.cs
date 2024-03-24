@@ -29,8 +29,6 @@ namespace UniMagContributions.Models
 		[ForeignKey("AnnualMagazineId")]
 		public virtual AnnualMagazine? AnnualMagazine { get; set; }
 
-		public virtual ICollection<Notification>? Notifications { get; set; }
-
 		public virtual ICollection<Feedback>? Feedbacks { get; set; }
 
 		public virtual ICollection<FileDetails>? FileDetails { get; set; }
