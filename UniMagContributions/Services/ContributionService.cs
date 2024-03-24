@@ -110,11 +110,11 @@ namespace UniMagContributions.Services
             return _fileService.GetFile(imageDetails[0].ImagePath);
         }
 
-        public List<ContributionDto> GetContributionByMagazineId(Guid annualManagazinId)
+        public List<ContributionDto> GetContributionByMagazineIdAndFacultyId(Guid annualManagazinId, Guid facultyId)
         {
             _ = _annualMagazineRepository.GetAnnualMagazineById(annualManagazinId) ?? throw new NotFoundException("Annual Magazine does not exists");
 
-            List<Contribution> contributionList = _contributionRepository.GetContributionByMagazineId(annualManagazinId);
+            List<Contribution> contributionList = _contributionRepository.GetContributionByMagazineIdAndFacultyId(annualManagazinId, facultyId);
             return _mapper.Map<List<ContributionDto>>(contributionList);
         }
 

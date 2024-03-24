@@ -11,7 +11,7 @@ namespace UniMagContributions.Repositories.Interface
 		Contribution GetContributionById(Guid id);
 		List<Contribution> GetAllContribution();
 		List<Contribution> GetContributionIsPublished(int limit);
-		List<Contribution> GetContributionByMagazineId(Guid annualManagazinId);
+		List<Contribution> GetContributionByMagazineIdAndFacultyId(Guid annualManagazinId, Guid facultyId);
 		List<Contribution> GetContributionByFilter(FilterDto filterDto);
 		List<Contribution> GetContributionByUserId(Guid userId);
 		void UpdateContribution(Contribution contribution);
