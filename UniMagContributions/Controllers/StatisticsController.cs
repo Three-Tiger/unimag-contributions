@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UniMagContributions.Dto.Contribution;
+using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-	[Route("api/statistics")]
+    [Authorize(Roles = "Administrator, Coordinator, Manager")]
+    [Route("api/statistics")]
 	[ApiController]
 	public class StatisticsController : ControllerBase
 	{
@@ -41,6 +44,13 @@ namespace UniMagContributions.Controllers
         {
             var numberOfAccountsCreated = _statisticsService.NumberOfAccountsCreated();
             return Ok(numberOfAccountsCreated);
+        }
+
+        [HttpGet("top-6")]
+        public IActionResult GetTop6()
+        {
+            List<ContributionDto> contributions = _statisticsService.GetTop6Contribution();
+            return Ok(contributions);
         }
     }
 }

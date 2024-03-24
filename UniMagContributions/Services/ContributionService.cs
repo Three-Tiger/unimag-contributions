@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using UniMagContributions.Constraints;
 using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Dto.Faculty;
 using UniMagContributions.Exceptions;
@@ -84,12 +85,6 @@ namespace UniMagContributions.Services
             return _mapper.Map<List<ContributionDto>>(contributionList);
         }
 
-        public List<ContributionDto> GetTop6Contribution()
-        {
-            List<Contribution> contributionList = _contributionRepository.GetTop6Contribution();
-            return _mapper.Map<List<ContributionDto>>(contributionList);
-        }
-
         public List<ContributionDto> GetContributionIsPublished(int limit)
         {
             List<Contribution> contributionList = _contributionRepository.GetContributionIsPublished(limit);
@@ -123,6 +118,11 @@ namespace UniMagContributions.Services
             return _mapper.Map<List<ContributionDto>>(contributionList);
         }
 
+        public List<ContributionDto> GetContributionByFilter(FilterDto filterDto)
+        {
+            List<Contribution> contributionList = _contributionRepository.GetContributionByFilter(filterDto);
+            return _mapper.Map<List<ContributionDto>>(contributionList);
+        }
 
         public ContributionDto UpdateContribution(Guid id, UpdateContributionDto updateContributionDto)
         {

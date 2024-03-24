@@ -43,8 +43,5 @@ namespace UniMagContributions.Models
 		public virtual ICollection<Contribution>? Contributions { get; set; }
 
 		public virtual ICollection<Feedback>? Feedbacks { get; set; }
-
-		public virtual ICollection<Notification>? Notifications { get; set; }
-
 	}
 }

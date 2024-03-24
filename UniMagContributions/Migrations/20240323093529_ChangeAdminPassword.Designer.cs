@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniMagContributions.Models;
 
@@ -11,9 +12,10 @@ using UniMagContributions.Models;
 namespace UniMagContributions.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240323093529_ChangeAdminPassword")]
+    partial class ChangeAdminPassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,6 +282,34 @@ namespace UniMagContributions.Migrations
                     b.ToTable("ImageDetails");
                 });
 
+            modelBuilder.Entity("UniMagContributions.Models.Notification", b =>
+                {
+                    b.Property<Guid>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ContributionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("NotificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("ContributionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("UniMagContributions.Models.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
@@ -386,7 +416,7 @@ namespace UniMagContributions.Migrations
                             FacultyId = new Guid("52b9ef2e-0e06-4443-8ec7-b008a0ffd30b"),
                             FirstName = "Admin",
                             LastName = "Admin",
-                            Password = "AQAAAAEAACcQAAAAEBs5D1IG+j+h3Ceg2KvErJyMaBx5aU9VUar2eaK8O5jDDbTUyvSaTT+abSh/9/SZzA==",
+                            Password = "AQAAAAEAACcQAAAAEK4PPf2K6G4NrkLQFQr86rHO+JjGjxsqP5wiioMA0OnLMPiRUjsK9NiwGj3L5xi2mg==",
                             PhoneNumber = "1234567890",
                             RoleId = new Guid("0d160f4d-3d44-4d73-b6d2-501b034d8dc6")
                         });
@@ -452,6 +482,25 @@ namespace UniMagContributions.Migrations
                     b.Navigation("Contribution");
                 });
 
+            modelBuilder.Entity("UniMagContributions.Models.Notification", b =>
+                {
+                    b.HasOne("UniMagContributions.Models.Contribution", "Contribution")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ContributionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("UniMagContributions.Models.User", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Contribution");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("UniMagContributions.Models.User", b =>
                 {
                     b.HasOne("UniMagContributions.Models.Faculty", "Faculty")
@@ -483,6 +532,8 @@ namespace UniMagContributions.Migrations
                     b.Navigation("FileDetails");
 
                     b.Navigation("ImageDetails");
+
+                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("UniMagContributions.Models.Faculty", b =>
@@ -500,6 +551,8 @@ namespace UniMagContributions.Migrations
                     b.Navigation("Contributions");
 
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("Notifications");
                 });
 #pragma warning restore 612, 618
         }

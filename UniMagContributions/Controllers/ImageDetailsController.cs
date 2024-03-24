@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using UniMagContributions.Dto.FileDetails;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
 using UniMagContributions.Exceptions;
 using UniMagContributions.Services.Interface;
 using UniMagContributions.Dto.ImageDetail;
-using UniMagContributions.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UniMagContributions.Controllers
 {
+    [Authorize]
     [Route("api/image-details")]
     [ApiController]
     public class ImageDetailsController : ControllerBase
@@ -20,8 +19,9 @@ namespace UniMagContributions.Controllers
             _imageDetailService = imageDetailService;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
-        public IActionResult GetProfilePicture(Guid id)
+        public IActionResult GetContributionPicture(Guid id)
         {
             ResponseDto response = new();
             try

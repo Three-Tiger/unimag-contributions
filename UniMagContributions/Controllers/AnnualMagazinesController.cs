@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
 using UniMagContributions.Dto.AnnualMagazine;
-using UniMagContributions.Dto.Faculty;
 using UniMagContributions.Exceptions;
-using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-	[Route("api/annual-magazines")]
+    [Authorize(Roles = "Administrator, Coordinator, Manager")]
+    [Authorize]
+    [Route("api/annual-magazines")]
 	[ApiController]
 	public class AnnualMagazinesController : ControllerBase
 	{
@@ -20,7 +20,8 @@ namespace UniMagContributions.Controllers
 			_annualMagazineService = annualMagazineService;
 		}
 
-		[HttpGet]
+        [AllowAnonymous]
+        [HttpGet]
 		public IActionResult Get()
 		{
 			List<AnnualMagazineDto> annualMagazines = _annualMagazineService.GetAllAnnualMagazine();

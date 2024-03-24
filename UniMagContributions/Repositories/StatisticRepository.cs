@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using UniMagContributions.Constraints;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories.Interface;
@@ -127,6 +128,24 @@ namespace UniMagContributions.Repositories
             }
 
             return result;
+        }
+
+        public List<Contribution> GetTop6Contribution()
+        {
+            try
+            {
+                return _context.Contributions
+                    .Include(u => u.User).ThenInclude(u => u.Faculty)
+                    .Include(f => f.FileDetails)
+                    .Include(i => i.ImageDetails)
+                    .OrderByDescending(c => c.SubmissionDate)
+                    .Take(6)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error getting Contribution");
+            }
         }
     }
 }

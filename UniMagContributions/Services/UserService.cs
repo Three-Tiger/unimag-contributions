@@ -17,12 +17,16 @@ namespace UniMagContributions.Services
         private readonly IWebHostEnvironment environment;
         private readonly IUserRepository _userRepository;
         private readonly IFileService _fileService;
+        private readonly IFeedbackService _feedbackService;
+        private readonly IContributionService _contributionService;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IWebHostEnvironment env, IMapper mapper, IFileService fileService)
+        public UserService(IUserRepository userRepository, IWebHostEnvironment env, IMapper mapper, IFileService fileService, IFeedbackService feedbackService, IContributionService contributionService)
         {
             _userRepository = userRepository;
             _fileService = fileService;
+            _feedbackService = feedbackService;
+            _contributionService = contributionService;
             environment = env;
             _mapper = mapper;
         }
@@ -69,6 +73,17 @@ namespace UniMagContributions.Services
             {
                 _fileService.DeleteFile(user.ProfilePicture);
             }
+
+            foreach (var item in user.Feedbacks)
+            {
+                _feedbackService.DeleteFeedback(item.FeedBackId);
+            }
+
+            foreach (var item in user.Contributions)
+            {
+                _contributionService.DeleteContribution(item.ContributionId);
+            }
+
             _userRepository.DeleteUser(user);
 
             return "User deleted successfully";

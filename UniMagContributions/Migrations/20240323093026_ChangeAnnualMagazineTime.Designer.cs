@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniMagContributions.Models;
 
@@ -11,9 +12,10 @@ using UniMagContributions.Models;
 namespace UniMagContributions.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240323093026_ChangeAnnualMagazineTime")]
+    partial class ChangeAnnualMagazineTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,45 +59,45 @@ namespace UniMagContributions.Migrations
                         {
                             AnnualMagazineId = new Guid("81495466-6fdb-45e6-bfd2-1995597d7df9"),
                             AcademicYear = "2018-2019",
-                            ClosureDate = new DateTime(2019, 5, 1, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2019, 5, 1, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Description = "The use of mobile phones has various effects on individuals and society. While they provide convenience and connectivity, overuse can lead to negative impacts such as decreased attention spans, disrupted sleep patterns, and increased risk of accidents due to distracted driving. Additionally, the production and disposal of mobile phones contribute to environmental pollution through the extraction of raw materials, energy consumption during manufacturing, and electronic waste generation.",
-                            FinalClosureDate = new DateTime(2019, 6, 30, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2019, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Title = "Effect of Using Mobile Phone"
                         },
                         new
                         {
                             AnnualMagazineId = new Guid("04df80e1-fd59-4121-af73-e5356a2abd2e"),
                             AcademicYear = "2019-2020",
-                            ClosureDate = new DateTime(2020, 5, 1, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2020, 5, 1, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Description = "Environmental pollution refers to the contamination of the natural environment by harmful substances, resulting in adverse effects on ecosystems, human health, and biodiversity. Pollution sources include industrial activities, transportation, agriculture, and improper waste disposal. Consequences of pollution include air and water quality degradation, soil contamination, climate change, and negative impacts on wildlife and human populations.",
-                            FinalClosureDate = new DateTime(2020, 6, 30, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2020, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Title = "Environmental pollution and its consequences"
                         },
                         new
                         {
                             AnnualMagazineId = new Guid("3801a15f-18d4-40c3-8a70-28c8a35ca010"),
                             AcademicYear = "2020-2021",
-                            ClosureDate = new DateTime(2021, 5, 1, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2021, 5, 1, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Description = "Social media platforms have profoundly influenced modern society by changing communication patterns, social interactions, and information dissemination. While they facilitate connectivity and access to diverse perspectives, social media also raise concerns about privacy, mental health, and the spread of misinformation. The addictive nature of social media usage can lead to decreased productivity and increased feelings of loneliness and depression among users.",
-                            FinalClosureDate = new DateTime(2021, 6, 30, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2021, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Title = "The impact of social media on society"
                         },
                         new
                         {
                             AnnualMagazineId = new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"),
                             AcademicYear = "2021-2022",
-                            ClosureDate = new DateTime(2022, 5, 1, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2022, 5, 1, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Description = "The practice of physically disciplining children, such as spanking or corporal punishment, remains a contentious issue. While some argue that it can be an effective way to discipline and teach obedience, others advocate for non-violent forms of discipline that focus on positive reinforcement and communication. Research suggests that physical punishment can have negative long-term effects on children's mental health and behavior, leading to aggression, low self-esteem, and increased likelihood of engaging in violent behavior.",
-                            FinalClosureDate = new DateTime(2022, 6, 30, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2022, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Title = "Should we beat children to educate them or not?"
                         },
                         new
                         {
                             AnnualMagazineId = new Guid("4f1e0068-0c6a-4a45-8f8c-92fc7f4e58b5"),
                             AcademicYear = "2022-2023",
-                            ClosureDate = new DateTime(2023, 5, 1, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2023, 5, 1, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Description = "Blockchain technology offers innovative solutions to enhance transparency, traceability, and efficiency in supply chain management. By creating a decentralized and immutable ledger of transactions, blockchain enables secure and verifiable recording of supply chain activities, including sourcing, production, transportation, and delivery. This technology can help mitigate risks such as counterfeiting, fraud, and supply chain disruptions while improving trust among stakeholders and ensuring ethical practices.",
-                            FinalClosureDate = new DateTime(2023, 6, 30, 23, 59, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2023, 6, 30, 23, 59, 59, 0, DateTimeKind.Unspecified),
                             Title = "Blockchain application in supply chain management"
                         });
                 });
@@ -280,6 +282,34 @@ namespace UniMagContributions.Migrations
                     b.ToTable("ImageDetails");
                 });
 
+            modelBuilder.Entity("UniMagContributions.Models.Notification", b =>
+                {
+                    b.Property<Guid>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ContributionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("NotificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("ContributionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("UniMagContributions.Models.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
@@ -381,12 +411,12 @@ namespace UniMagContributions.Migrations
                         {
                             UserId = new Guid("86f04ea5-9421-42d0-bfde-e75a7b01dc3f"),
                             Address = "Admin Address",
-                            DateOfBirth = new DateTime(2002, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(2024, 3, 23, 16, 30, 26, 619, DateTimeKind.Local).AddTicks(8528),
                             Email = "admin@gmail.com",
                             FacultyId = new Guid("52b9ef2e-0e06-4443-8ec7-b008a0ffd30b"),
                             FirstName = "Admin",
                             LastName = "Admin",
-                            Password = "AQAAAAEAACcQAAAAEBs5D1IG+j+h3Ceg2KvErJyMaBx5aU9VUar2eaK8O5jDDbTUyvSaTT+abSh/9/SZzA==",
+                            Password = "AQAAAAEAACcQAAAAENtQ7u4ISjxoA3svZNiNcpiJc0f+a1/7419FnPHOghPZ8ZpYJi+CEW/DB6ZRIJ3bDw==",
                             PhoneNumber = "1234567890",
                             RoleId = new Guid("0d160f4d-3d44-4d73-b6d2-501b034d8dc6")
                         });
@@ -452,6 +482,25 @@ namespace UniMagContributions.Migrations
                     b.Navigation("Contribution");
                 });
 
+            modelBuilder.Entity("UniMagContributions.Models.Notification", b =>
+                {
+                    b.HasOne("UniMagContributions.Models.Contribution", "Contribution")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ContributionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("UniMagContributions.Models.User", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Contribution");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("UniMagContributions.Models.User", b =>
                 {
                     b.HasOne("UniMagContributions.Models.Faculty", "Faculty")
@@ -483,6 +532,8 @@ namespace UniMagContributions.Migrations
                     b.Navigation("FileDetails");
 
                     b.Navigation("ImageDetails");
+
+                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("UniMagContributions.Models.Faculty", b =>
@@ -500,6 +551,8 @@ namespace UniMagContributions.Migrations
                     b.Navigation("Contributions");
 
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("Notifications");
                 });
 #pragma warning restore 612, 618
         }

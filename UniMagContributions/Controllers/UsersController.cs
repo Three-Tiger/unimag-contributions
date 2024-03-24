@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using UniMagContributions.Dto.Auth;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto;
 using UniMagContributions.Services.Interface;
 using UniMagContributions.Exceptions;
 using UniMagContributions.Dto.User;
 using Microsoft.AspNetCore.Authorization;
-using UniMagContributions.Services;
 
 namespace UniMagContributions.Controllers
 {

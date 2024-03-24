@@ -10,13 +10,11 @@ namespace UniMagContributions.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment environment;
         private readonly IUserRepository _userRepository;
 
-        public EmailService(IConfiguration configuration, IWebHostEnvironment environment, IUserRepository userRepository)
+        public EmailService(IWebHostEnvironment environment, IUserRepository userRepository)
         {
-            _configuration = configuration;
             this.environment = environment;
             _userRepository = userRepository;
         }
@@ -69,7 +67,7 @@ namespace UniMagContributions.Services
         private MimeMessage CreateEmailMessage(Message message, string coordinatorName)
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(MailboxAddress.Parse(_configuration["EmailConfiguration:From"]));
+            emailMessage.From.Add(MailboxAddress.Parse(Environment.GetEnvironmentVariable("EMAIL_FROM")));
             emailMessage.To.Add(MailboxAddress.Parse(message.To));
             emailMessage.Subject = message.Subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = PopulateBody(message.Content, coordinatorName) };
@@ -83,9 +81,9 @@ namespace UniMagContributions.Services
             {
                 try
                 {
-                    client.Connect(_configuration["EmailConfiguration:SmtpServer"], int.Parse(_configuration["EmailConfiguration:Port"]), SecureSocketOptions.StartTls);
+                    client.Connect(Environment.GetEnvironmentVariable("EMAIL_HOST"), int.Parse(Environment.GetEnvironmentVariable("EMAIL_PORT")), SecureSocketOptions.StartTls);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    client.Authenticate(_configuration["EmailConfiguration:Username"], _configuration["EmailConfiguration:Password"]);
+                    client.Authenticate(Environment.GetEnvironmentVariable("EMAIL_USERNAME"), Environment.GetEnvironmentVariable("EMAIL_PASSWORD"));
 
                     client.Send(mailMessage);
                 }
@@ -107,9 +105,9 @@ namespace UniMagContributions.Services
             {
                 try
                 {
-                    await client.ConnectAsync(_configuration["EmailConfiguration:SmtpServer"], int.Parse(_configuration["EmailConfiguration:Port"]), SecureSocketOptions.StartTls);
+                    await client.ConnectAsync(Environment.GetEnvironmentVariable("EMAIL_HOST"), int.Parse(Environment.GetEnvironmentVariable("EMAIL_PORT")), SecureSocketOptions.StartTls);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    await client.AuthenticateAsync(_configuration["EmailConfiguration:Username"], _configuration["EmailConfiguration:Password"]);
+                    await client.AuthenticateAsync(Environment.GetEnvironmentVariable("EMAIL_USERNAME"), Environment.GetEnvironmentVariable("EMAIL_PASSWORD"));
 
                     await client.SendAsync(mailMessage);
                 }

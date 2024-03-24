@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Dto;
 using UniMagContributions.Dto.Feedback;
 using UniMagContributions.Exceptions;
-using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-	[Route("api/feedbacks")]
+    [Authorize]
+    [Route("api/feedbacks")]
 	[ApiController]
 	public class FeedbacksController : ControllerBase
 	{

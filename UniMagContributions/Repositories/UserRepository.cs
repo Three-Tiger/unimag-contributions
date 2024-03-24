@@ -49,6 +49,8 @@ namespace UniMagContributions.Repositories
                 return _context.Users
                     .Include(u => u.Faculty)
                     .Include(u => u.Role)
+                    .Include(u => u.Feedbacks)
+                    .Include(u => u.Contributions)
                     .AsNoTracking()
                     .FirstOrDefault(u => u.UserId == id);
             }

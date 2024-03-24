@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto.User;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
+    [Authorize]
     [Route("api/roles")]
     [ApiController]
     public class RolesController : ControllerBase
