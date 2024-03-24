@@ -169,6 +169,15 @@ namespace UniMagContributions.Services
             return _mapper.Map<UserDto>(_userRepository.GetUserById(user.UserId));
         }
 
+        public UserDto RemoveProfilePicture(Guid id)
+        {
+            User user = _userRepository.GetUserById(id) ?? throw new NotFoundException("User not found");
+            _fileService.DeleteFile(user.ProfilePicture);
+            user.ProfilePicture = null;
+            _userRepository.UpdateUser(user);
+            return _mapper.Map<UserDto>(_userRepository.GetUserById(user.UserId));
+        }
+
         public string ChangePassword(Guid userId, ChangePasswordDto changePasswordDto)
         {
             User user = _userRepository.GetUserById(userId) ?? throw new NotFoundException("User not found");

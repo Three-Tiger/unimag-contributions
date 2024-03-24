@@ -9,6 +9,7 @@ namespace UniMagContributions.Services.Interface
         UserDto GetUserById(Guid userId);
         UserDto UpdateProfile(Guid id, UpdateUserDto updateUserDto);
         UserDto UpdateUser(Guid id, UpdateUserDto updateUserDto);
+        UserDto RemoveProfilePicture(Guid id);
         string DeleteUser(Guid userId);
         UserDto CreateUser(CreateUserDto userDto);
         List<UserDto> GetAllUser();

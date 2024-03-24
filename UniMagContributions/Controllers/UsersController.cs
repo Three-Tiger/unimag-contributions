@@ -151,6 +151,27 @@ namespace UniMagContributions.Controllers
             }
         }
 
+        [HttpPut("{id}/profile-picture")]
+        public IActionResult RemoveProfilePicture(Guid id)
+        {
+            ResponseDto response = new();
+            try
+            {
+                UserDto user = _userService.RemoveProfilePicture(id);
+                return Ok(user);
+            }
+            catch (NotFoundException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status404NotFound, response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
         [HttpPut("{id}/change-password")]
         public IActionResult ChangePassword(Guid id, [FromBody] ChangePasswordDto changePasswordDto)
         {
