@@ -136,12 +136,12 @@ namespace UniMagContributions.Services
             return _mapper.Map<ContributionDto>(contributionToUpdate);
         }
 
-        public ContributionDto GetContributionByMagazineIdAndUserId(Guid annualManagazinId, Guid userId)
+        public ContributionDto? GetContributionByMagazineIdAndUserId(Guid annualManagazinId, Guid userId)
         {
             Contribution isContributionExist = _contributionRepository.IsContributionExist(userId, annualManagazinId);
             if (isContributionExist == null)
             {
-                throw new NotFoundException("Contribution does not exists");
+                return null;
             }
 
             Contribution result = _contributionRepository.GetContributionById(isContributionExist.ContributionId);
