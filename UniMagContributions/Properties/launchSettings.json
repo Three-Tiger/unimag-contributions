@@ -20,7 +20,12 @@
         "EMAIL_PORT": "2525",
         "EMAIL_FROM": "no-reply@unimag.com",
         "EMAIL_USERNAME": "70b91342c97011",
-        "EMAIL_PASSWORD": "b6884669a02f77"
+        "EMAIL_PASSWORD": "b6884669a02f77",
+        "PUSHER_APP_ID": "1776612",
+        "PUSHER_APP_KEY": "225d52aa0ca3ec6aaebe",
+        "PUSHER_APP_SECRET": "748db4c432646c997e11",
+        "CHANNEL_NAME": "unimag-chat",
+        "EVENT_NAME": "message"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7135;http://localhost:5287"

@@ -48,7 +48,7 @@ namespace UniMagContributions.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Post([FromBody] CreateFeedbackDto createFeedbackDto)
+		public async Task<IActionResult> Post([FromBody] CreateFeedbackDto createFeedbackDto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -58,7 +58,7 @@ namespace UniMagContributions.Controllers
 			ResponseDto response = new();
 			try
 			{
-				FeedbackDto feedbackDto = _feedbackService.AddFeedback(createFeedbackDto);
+				FeedbackDto feedbackDto = await _feedbackService.AddFeedback(createFeedbackDto);
 				return Ok(feedbackDto);
 			}
 			catch (ConflictException e)
