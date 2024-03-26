@@ -21,9 +21,9 @@ namespace UniMagContributions.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-		public IActionResult Get()
+		public IActionResult Get(int limit)
 		{
-			List<FacultyDto> faculties = _facultyService.GetAllFaculty();
+			List<FacultyDto> faculties = _facultyService.GetAllFaculty(limit);
 			return Ok(faculties);
 		}
 

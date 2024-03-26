@@ -42,9 +42,9 @@ namespace UniMagContributions.Services
 			return "Delete successful";
 		}
 
-		public List<FacultyDto> GetAllFaculty()
+		public List<FacultyDto> GetAllFaculty(int limit)
 		{
-			List<Faculty> facultyList = _facultyRepository.GetAllFaculty();
+			List<Faculty> facultyList = _facultyRepository.GetAllFaculty(limit);
 			return _mapper.Map<List<FacultyDto>>(facultyList);
 		}
 

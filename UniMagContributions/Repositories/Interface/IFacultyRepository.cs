@@ -7,7 +7,7 @@ namespace UniMagContributions.Repositories.Interface
 		void CreateFaculty(Faculty faculty);
 		Faculty GetFacultyByName(string name);
 		Faculty GetFacultyById(Guid id);
-		List<Faculty> GetAllFaculty();
+		List<Faculty> GetAllFaculty(int limit);
 		void UpdateFaculty(Faculty faculty);
 		void DeleteFaculty(Faculty faculty);
 	}
