@@ -9,6 +9,6 @@ namespace UniMagContributions.Services.Interface
 		FacultyDto UpdateFaculty(Guid id, UpdateFacultyDto facultyDto);
 		string DeleteFaculty(Guid id);
 		FacultyDto GetFacultyById(Guid id);
-		List<FacultyDto> GetAllFaculty();
+		List<FacultyDto> GetAllFaculty(int limit);
 	}
 }

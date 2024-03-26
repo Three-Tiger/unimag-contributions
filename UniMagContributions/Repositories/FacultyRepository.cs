@@ -40,11 +40,18 @@ namespace UniMagContributions.Repositories
 			}
 		}
 
-		public List<Faculty> GetAllFaculty()
+		public List<Faculty> GetAllFaculty(int limit)
 		{
 			try
 			{
-				return _context.Faculties.Where(f => !f.Name.Equals("Admin")).ToList();
+				if (limit == 0)
+				{
+                    return _context.Faculties.Where(f => !f.Name.Equals("Admin")).ToList();
+                }
+				else
+				{
+					return _context.Faculties.Where(f => !f.Name.Equals("Admin")).Take(limit).ToList();
+				}
 			}
 			catch (Exception)
 			{
