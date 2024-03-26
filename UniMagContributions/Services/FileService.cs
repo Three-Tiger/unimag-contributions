@@ -35,10 +35,10 @@ namespace UniMagContributions.Services
                 string ext = Path.GetExtension(file.FileName);
                 string[] allowedExtensions = new string[] { ".jpg", ".png", ".jpeg", ".docx" };
 
-                if (!allowedExtensions.Contains(ext))
+                if (!allowedExtensions.Contains(ext.ToLower()))
                 {
-                    string msg = string.Format("Only {0} extensions are allowed", string.Join(",", allowedExtensions));
-                    throw new InvalidException(msg);
+                    string msg = string.Format("Only {0} extensions are allowed", string.Join(", ", allowedExtensions));
+                    return new Tuple<int, string>(0, msg);
                 }
 
                 string uniqueString = Guid.NewGuid().ToString();

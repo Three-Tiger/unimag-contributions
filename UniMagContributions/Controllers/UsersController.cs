@@ -123,6 +123,11 @@ namespace UniMagContributions.Controllers
                 response.Message = e.Message;
                 return StatusCode(StatusCodes.Status404NotFound, response);
             }
+            catch (InvalidException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status400BadRequest, response);
+            }
             catch (Exception e)
             {
                 response.Message = e.Message;
@@ -143,6 +148,11 @@ namespace UniMagContributions.Controllers
             {
                 response.Message = e.Message;
                 return StatusCode(StatusCodes.Status404NotFound, response);
+            }
+            catch (InvalidException e)
+            {
+                response.Message = e.Message;
+                return StatusCode(StatusCodes.Status400BadRequest, response);
             }
             catch (Exception e)
             {
