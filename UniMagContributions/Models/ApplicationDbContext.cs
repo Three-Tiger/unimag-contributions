@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using UniMagContributions.Constraints;
-using UniMagContributions.Repositories.Interface;
 
 namespace UniMagContributions.Models
 {

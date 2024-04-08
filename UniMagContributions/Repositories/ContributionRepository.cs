@@ -115,6 +115,11 @@ namespace UniMagContributions.Repositories
                     .OrderByDescending(c => c.SubmissionDate)
                     .AsQueryable();
 
+                if (filterDto.FacultyId.HasValue)
+                {
+                    query = query.Where(u => u.User.FacultyId == filterDto.FacultyId);
+                }
+
                 if (filterDto.AnnualMagazineId.HasValue)
                 {
                     query = query.Where(u => u.AnnualMagazineId == filterDto.AnnualMagazineId);
