@@ -30,13 +30,6 @@ namespace UniMagContributions.Services
 
         public ContributionDto AddContribution(CreateContributionDto contributionDto)
         {
-            /*Contribution isContributionExist = _contributionRepository.IsContributionExist(contributionDto.UserId, contributionDto.AnnualMagazineId);
-            if (isContributionExist != null)
-            {
-                Contribution result = _contributionRepository.GetContributionById(isContributionExist.ContributionId);
-                return _mapper.Map<ContributionDto>(result);
-            }*/
-
             Contribution contribution = _contributionRepository.GetContributionByTitle(contributionDto.Title);
             if (contribution != null)
             {

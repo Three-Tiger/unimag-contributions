@@ -7,7 +7,7 @@ using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-    [Authorize(Roles = "Administrator, Coordinator, Student")]
+    [Authorize(Roles = "Administrator, Coordinator, Manager, Guest")]
     [Route("api/statistics")]
 	[ApiController]
 	public class StatisticsController : ControllerBase
