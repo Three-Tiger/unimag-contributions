@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniMagContributions.Dto.Contribution;
+using UniMagContributions.Dto.Statistic;
 using UniMagContributions.Services;
 using UniMagContributions.Services.Interface;
 
 namespace UniMagContributions.Controllers
 {
-    [Authorize(Roles = "Administrator, Coordinator, Manager")]
+    [Authorize(Roles = "Administrator, Coordinator, Student")]
     [Route("api/statistics")]
 	[ApiController]
 	public class StatisticsController : ControllerBase
@@ -33,9 +34,9 @@ namespace UniMagContributions.Controllers
 		}
 
         [HttpGet("acceptance-rejection-rate")]
-        public IActionResult GetAcceptanceRejectionRate()
+        public IActionResult GetAcceptanceRejectionRate([FromQuery] StatisticDto statisticDto)
         {
-            var getAcceptanceRejectionRate = _statisticsService.GetAcceptanceRejectionRate();
+            var getAcceptanceRejectionRate = _statisticsService.GetAcceptanceRejectionRate(statisticDto);
             return Ok(getAcceptanceRejectionRate);
         }
 

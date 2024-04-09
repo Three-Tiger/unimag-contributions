@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
+using System.Collections.Generic;
 using UniMagContributions.Constraints;
 using UniMagContributions.Dto.Contribution;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories.Interface;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UniMagContributions.Repositories
 {
@@ -85,18 +87,28 @@ namespace UniMagContributions.Repositories
             }
         }
 
-        public List<Contribution> GetContributionByMagazineIdAndFacultyId(Guid annualManagazinId, Guid facultyId)
+        public List<Contribution> GetContributionByMagazineIdAndFacultyId(QueryDto queryDto)
         {
             try
             {
-                return _context.Contributions
+                var query = _context.Contributions
                     .Include(u => u.User).ThenInclude(u => u.Faculty)
                     .Include(f => f.FileDetails)
                     .Include(a => a.ImageDetails)
-                    .Where(u => u.AnnualMagazineId == annualManagazinId && u.User.FacultyId == facultyId)
-                    .OrderByDescending(c => c.SubmissionDate)
-                    .ToList();
-            }
+                    .Where(u => u.AnnualMagazineId == queryDto.AnnualMagazineId)
+					.AsQueryable();
+
+				List<Contribution> contributions = query.ToList();
+
+				if (queryDto.FacultyId.HasValue)
+				{
+					query = query.Where(a => a.User.FacultyId == queryDto.FacultyId);
+				}
+
+                contributions = query.ToList();
+
+				return contributions;
+			}
             catch (Exception)
             {
                 throw new Exception("Error getting Contribution");
