@@ -77,13 +77,13 @@ namespace UniMagContributions.Controllers
             }
         }
 
-        [HttpGet("annual-magazine/{annualManagazinId}/faculty/{facultyId}")]
-        public IActionResult GetContrubutionByAnnualMagazineIdAndFacultyId(Guid annualManagazinId, Guid facultyId)
+        [HttpGet("manage")]
+        public IActionResult GetContrubutionByAnnualMagazineIdAndFacultyId([FromQuery] QueryDto queryDto)
         {
             ResponseDto response = new();
             try
             {
-                List<ContributionDto> contributions = _contributionService.GetContributionByMagazineIdAndFacultyId(annualManagazinId, facultyId);
+                List<ContributionDto> contributions = _contributionService.GetContributionByMagazineIdAndFacultyId(queryDto);
                 return Ok(contributions);
             }
             catch (NotFoundException e)

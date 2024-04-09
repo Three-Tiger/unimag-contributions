@@ -30,13 +30,6 @@ namespace UniMagContributions.Services
 
         public ContributionDto AddContribution(CreateContributionDto contributionDto)
         {
-            Contribution isContributionExist = _contributionRepository.IsContributionExist(contributionDto.UserId, contributionDto.AnnualMagazineId);
-            if (isContributionExist != null)
-            {
-                Contribution result = _contributionRepository.GetContributionById(isContributionExist.ContributionId);
-                return _mapper.Map<ContributionDto>(result);
-            }
-
             Contribution contribution = _contributionRepository.GetContributionByTitle(contributionDto.Title);
             if (contribution != null)
             {
@@ -110,11 +103,11 @@ namespace UniMagContributions.Services
             return _fileService.GetFile(imageDetails[0].ImagePath);
         }
 
-        public List<ContributionDto> GetContributionByMagazineIdAndFacultyId(Guid annualManagazinId, Guid facultyId)
+        public List<ContributionDto> GetContributionByMagazineIdAndFacultyId(QueryDto queryDto)
         {
-            _ = _annualMagazineRepository.GetAnnualMagazineById(annualManagazinId) ?? throw new NotFoundException("Annual Magazine does not exists");
+            _ = _annualMagazineRepository.GetAnnualMagazineById(queryDto.AnnualMagazineId) ?? throw new NotFoundException("Annual Magazine does not exists");
 
-            List<Contribution> contributionList = _contributionRepository.GetContributionByMagazineIdAndFacultyId(annualManagazinId, facultyId);
+            List<Contribution> contributionList = _contributionRepository.GetContributionByMagazineIdAndFacultyId(queryDto);
             return _mapper.Map<List<ContributionDto>>(contributionList);
         }
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using UniMagContributions.Dto.Contribution;
+using UniMagContributions.Dto.Statistic;
 using UniMagContributions.Models;
 using UniMagContributions.Repositories;
 using UniMagContributions.Repositories.Interface;
@@ -28,9 +29,9 @@ namespace UniMagContributions.Services
 			return _statisticsRepository.GetPercentageContributionsByFacultyAndAcademicYear();
 		}
 
-		public Dictionary<string, double> GetAcceptanceRejectionRate()
+		public Dictionary<string, double> GetAcceptanceRejectionRate(StatisticDto statisticDto)
 		{
-            return _statisticsRepository.GetAcceptanceRejectionRate();
+            return _statisticsRepository.GetAcceptanceRejectionRate(statisticDto);
         }
 
 		public Dictionary<string, int> NumberOfAccountsCreated()

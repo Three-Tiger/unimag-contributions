@@ -11,7 +11,7 @@ namespace UniMagContributions.Services.Interface
 		string DeleteContribution(Guid id);
 		ContributionDto GetContributionById(Guid id);
 		FileContentResult GetContributionPicture(Guid id);
-        List<ContributionDto> GetContributionByMagazineIdAndFacultyId(Guid annualManagazinId, Guid facultyId);
+        List<ContributionDto> GetContributionByMagazineIdAndFacultyId(QueryDto queryDto);
 		List<ContributionDto> GetContributionByFilter(FilterDto filterDto);
         List<ContributionDto> GetAllContribution();
 		List<ContributionDto> GetContributionIsPublished(int limit);
