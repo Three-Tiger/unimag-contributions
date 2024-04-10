@@ -20,9 +20,9 @@ namespace UniMagContributions.Controllers
 		}
 
 		[HttpGet("number-of-contributions")]
-		public IActionResult GetContributionsByFacultyAndAcademicYear()
+		public IActionResult GetContributionsByFacultyAndAcademicYear([FromQuery] StatisticDto statisticDto)
 		{
-			var contributionsByFacultyAndAcademicYear = _statisticsService.GetContributionsByFacultyAndAcademicYear();
+			var contributionsByFacultyAndAcademicYear = _statisticsService.GetContributionsByFacultyAndAcademicYear(statisticDto);
 			return Ok(contributionsByFacultyAndAcademicYear);
 		}
 
@@ -62,24 +62,24 @@ namespace UniMagContributions.Controllers
             return Ok(contributions);
         }
 
-		[HttpGet("contribution-without-feedback/{annualMagazineId}")]
-		public IActionResult GetContributionWithoutComment(Guid annualMagazineId)
+		[HttpGet("contribution-without-feedback")]
+		public IActionResult GetContributionWithoutComment([FromQuery] StatisticDto statisticDto)
 		{
-			var contributions = _statisticsService.GetNumberOfContributionsWithoutFeedback(annualMagazineId);
+			var contributions = _statisticsService.GetNumberOfContributionsWithoutFeedback(statisticDto);
 			return Ok(contributions);
 		}
 
-		[HttpGet("percentage-contribution-feedback/{annualMagazineId}")]
-		public IActionResult GetPercentFeedback(Guid annualMagazineId)
+		[HttpGet("percentage-contribution-feedback")]
+		public IActionResult GetPercentFeedback([FromQuery] StatisticDto statisticDto)
 		{
-			var contributions = _statisticsService.GetPercentageOfContributionsWithFeedback(annualMagazineId);
+			var contributions = _statisticsService.GetPercentageOfContributionsWithFeedback(statisticDto);
 			return Ok(contributions);
 		}
 
-		[HttpGet("percentage-contribution-feedback-after-14days/{annualMagazineId}")]
-		public IActionResult Get(Guid annualMagazineId)
+		[HttpGet("percentage-contribution-feedback-after-14days")]
+		public IActionResult Get([FromQuery] StatisticDto statisticDto)
 		{
-			var contributions = _statisticsService.GetPercentageOfContributionsWithFeedbackAfter14days(annualMagazineId);
+			var contributions = _statisticsService.GetPercentageOfContributionsWithFeedbackAfter14days(statisticDto);
 			return Ok(contributions);
 		}
 	}

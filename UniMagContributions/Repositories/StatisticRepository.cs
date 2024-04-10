@@ -16,10 +16,15 @@ namespace UniMagContributions.Repositories
 			_context = context;
 		}
 
-		public Dictionary<string, Dictionary<string, int>> GetContributionsByFacultyAndAcademicYear()
+		public Dictionary<string, Dictionary<string, int>> GetContributionsByFacultyAndAcademicYear(StatisticDto statisticDto)
 		{
 			var academicYears = _context.AnnualMagazines.OrderBy(a => a.FinalClosureDate).Select(a => a.AcademicYear).ToList();
-			var faculties = _context.Faculties.Where(f => f.Name != "Admin").Select(f => f.Name).Distinct().ToList();
+
+            var faculties = _context.Faculties.Where(f => f.Name != "Admin").Select(f => f.Name).Distinct().ToList();
+            if (statisticDto.FacultyId.HasValue)
+			{
+				faculties = _context.Faculties.Where(f => f.FacultyId == statisticDto.FacultyId).Select(f => f.Name).ToList();
+			}
 
 			var result = new Dictionary<string, Dictionary<string, int>>();
 
@@ -124,8 +129,8 @@ namespace UniMagContributions.Repositories
 				var acceptedContributions = _context.Contributions.Where(f => f.User.FacultyId == statisticDto.FacultyId && f.Status == EStatus.Approved).Count();
 				var rejectedContributions = _context.Contributions.Where(f => f.User.FacultyId == statisticDto.FacultyId && f.Status == EStatus.Approved).Count();
 
-				result["Accepted"] = Math.Round((acceptedContributions / (double)totalContributions) * 100, 2);
-				result["Rejected"] = Math.Round((rejectedContributions / (double)totalContributions) * 100, 2);
+				result["Accepted"] = Math.Round((acceptedContributions / (double)totalContributions) * 100, 0);
+				result["Rejected"] = Math.Round((rejectedContributions / (double)totalContributions) * 100, 0);
 			}
 
 			return result;
@@ -187,73 +192,83 @@ namespace UniMagContributions.Repositories
 			return result;
 		}
 
-		public Dictionary<string, int> GetNumberOfContributionsWithoutFeedback(Guid annualMagazineId)
+		public Dictionary<string, int> GetNumberOfContributionsWithoutFeedback(StatisticDto statisticDto)
 		{
-			var magazineName = _context.AnnualMagazines
-				.Where(a => a.AnnualMagazineId == annualMagazineId)
-				.FirstOrDefault();
-
-			if (magazineName == null)
+			int contributionsWithoutFeedbackCount;
+			int totalContributions;
+			if (!statisticDto.AnnualMagazineId.HasValue)
 			{
-				return null;
-			}
-
-			int contributionsWithoutFeedbackCount = _context.Contributions
-				.Count(c => c.AnnualMagazineId == annualMagazineId && (c.Feedbacks == null || !c.Feedbacks.Any()));
+                contributionsWithoutFeedbackCount = _context.Contributions
+                .Count(c => c.Feedbacks == null || !c.Feedbacks.Any());
+				totalContributions = _context.Contributions.Count();
+            } else
+			{
+                contributionsWithoutFeedbackCount = _context.Contributions
+                .Count(c => c.AnnualMagazineId == statisticDto.AnnualMagazineId && (c.Feedbacks == null || !c.Feedbacks.Any()));
+				totalContributions = _context.Contributions.Count(c => c.AnnualMagazineId == statisticDto.AnnualMagazineId);
+            }
 
 			var result = new Dictionary<string, int>();
-			result["Total"] = contributionsWithoutFeedbackCount;
+			result["contributionWithoutFeedback"] = contributionsWithoutFeedbackCount;
+			result["totalContributions"] = totalContributions;
 
 			return result;
 		}
 
 
-		public Dictionary<string, double> GetPercentageOfContributionsWithFeedback(Guid annualMagazineId)
+		public Dictionary<string, double> GetPercentageOfContributionsWithFeedback(StatisticDto statisticDto)
 		{
 			Dictionary<string, double> result = new Dictionary<string, double>();
-
-			int totalContributions = _context.Contributions.Count(c => c.AnnualMagazineId == annualMagazineId);
-
-			if (totalContributions == 0)
-			{
-				result["Percentage"] = 0; // To avoid division by zero
-				return result;
-			}
 
 			// Get the number of contributions with feedback for the specified annualMagazineId
-			var contributionsWithoutFeedback = GetNumberOfContributionsWithoutFeedback(annualMagazineId);
-			int contributionsWithFeedback = totalContributions - contributionsWithoutFeedback["Total"];
+			var contributionsWithoutFeedback = GetNumberOfContributionsWithoutFeedback(statisticDto);
+
+            if (contributionsWithoutFeedback["totalContributions"] == 0)
+            {
+                result["percentage"] = 0; // To avoid division by zero
+                return result;
+            }
+
+            int contributionsWithFeedback = contributionsWithoutFeedback["totalContributions"] - contributionsWithoutFeedback["contributionWithoutFeedback"];
 
 			// Calculate the percentage
-			double percentage = (double)contributionsWithFeedback / totalContributions * 100;
+			double percentage = (double)contributionsWithFeedback / contributionsWithoutFeedback["totalContributions"] * 100;
+			result["percentage"] = percentage;
 
-			result["Percentage"] = percentage;
 			return result;
 		}
 
-		public Dictionary<string, double> GetPercentageOfContributionsWithFeedbackAfter14days(Guid annualMagazineId)
+		public Dictionary<string, double> GetPercentageOfContributionsWithFeedbackAfter14days(StatisticDto statisticDto)
 		{
 			Dictionary<string, double> result = new Dictionary<string, double>();
 
-			// Get the total number of contributions for the specified annualMagazineId
-			int totalContributions = _context.Contributions.Count(c => c.AnnualMagazineId == annualMagazineId);
+            var contributionsWithoutFeedback = GetNumberOfContributionsWithoutFeedback(statisticDto);
 
-			if (totalContributions == 0)
-			{
-				result["Percentage"] = 0; // To avoid division by zero
-				return result;
-			}
+            if (contributionsWithoutFeedback["totalContributions"] == 0)
+            {
+                result["percentage"] = 0; // To avoid division by zero
+                return result;
+            }
 
 			// Get the number of contributions with feedback after 14 days of submission for the specified annualMagazineId
-			int contributionsWithFeedbackAfter14days = _context.Contributions
-				.Count(c => c.AnnualMagazineId == annualMagazineId &&
-							c.Feedbacks != null &&
-							c.Feedbacks.Any(f => f.FeedbackDate < f.Contribution.SubmissionDate.AddDays(14)));
+			int contributionsWithFeedbackAfter14days;
+            if (statisticDto.AnnualMagazineId.HasValue)
+			{
+                contributionsWithFeedbackAfter14days = _context.Contributions
+                .Count(c => c.AnnualMagazineId == statisticDto.AnnualMagazineId &&
+                            c.Feedbacks != null &&
+                            c.Feedbacks.Any(f => f.FeedbackDate < f.Contribution.SubmissionDate.AddDays(14)));
+            } else
+			{
+                contributionsWithFeedbackAfter14days = _context.Contributions
+                .Count(c => c.Feedbacks != null &&
+                            c.Feedbacks.Any(f => f.FeedbackDate < f.Contribution.SubmissionDate.AddDays(14)));
+            }
 
 			// Calculate the percentage
-			double percentage = (double)contributionsWithFeedbackAfter14days / totalContributions * 100;
+			double percentage = (double)contributionsWithFeedbackAfter14days / contributionsWithoutFeedback["totalContributions"] * 100;
 
-			result["Percentage"] = percentage;
+			result["percentage"] = percentage;
 			return result;
 		}
 

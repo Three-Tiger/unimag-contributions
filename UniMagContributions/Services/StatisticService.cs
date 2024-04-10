@@ -19,9 +19,9 @@ namespace UniMagContributions.Services
 			_statisticsRepository = statisticsRepository;
 		}
 
-		public Dictionary<string, Dictionary<string, int>> GetContributionsByFacultyAndAcademicYear()
+		public Dictionary<string, Dictionary<string, int>> GetContributionsByFacultyAndAcademicYear(StatisticDto statisticDto)
 		{
-			return _statisticsRepository.GetContributionsByFacultyAndAcademicYear(); ;
+			return _statisticsRepository.GetContributionsByFacultyAndAcademicYear(statisticDto); ;
 		}
 
 		public Dictionary<string, Dictionary<string, double>> GetPercentageContributionsByFacultyAndAcademicYear()
@@ -50,19 +50,19 @@ namespace UniMagContributions.Services
 			return _statisticsRepository.TotalPublicContributionsByFacultyId(facultyId);
 		}
 
-		public Dictionary<string, int> GetNumberOfContributionsWithoutFeedback(Guid annualMagazineId)
+		public Dictionary<string, int> GetNumberOfContributionsWithoutFeedback(StatisticDto statisticDto)
 		{
-			return _statisticsRepository.GetNumberOfContributionsWithoutFeedback(annualMagazineId);
+			return _statisticsRepository.GetNumberOfContributionsWithoutFeedback(statisticDto);
 		}
 
-		public Dictionary<string, double> GetPercentageOfContributionsWithFeedback(Guid annualMagazineId)
+		public Dictionary<string, double> GetPercentageOfContributionsWithFeedback(StatisticDto statisticDto)
 		{
-			return _statisticsRepository.GetPercentageOfContributionsWithFeedback(annualMagazineId);
+			return _statisticsRepository.GetPercentageOfContributionsWithFeedback(statisticDto);
 		}
 
-		public Dictionary<string, double> GetPercentageOfContributionsWithFeedbackAfter14days(Guid annualMagazineId)
+		public Dictionary<string, double> GetPercentageOfContributionsWithFeedbackAfter14days(StatisticDto statisticDto)
 		{
-			return _statisticsRepository.GetPercentageOfContributionsWithFeedbackAfter14days(annualMagazineId);
+			return _statisticsRepository.GetPercentageOfContributionsWithFeedbackAfter14days(statisticDto);
 		}
 	}
 }
