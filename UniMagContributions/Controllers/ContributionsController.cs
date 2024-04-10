@@ -125,7 +125,7 @@ namespace UniMagContributions.Controllers
             ResponseDto response = new();
             try
             {
-                ContributionDto contribution = _contributionService.GetContributionByMagazineIdAndUserId(annualManagazinId, userId);
+                List<ContributionDto> contribution = _contributionService.GetContributionByMagazineIdAndUserId(annualManagazinId, userId);
                 return Ok(contribution);
             }
             catch (NotFoundException e)

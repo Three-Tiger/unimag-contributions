@@ -96,19 +96,24 @@ namespace UniMagContributions.Repositories
                     .Include(f => f.FileDetails)
                     .Include(a => a.ImageDetails)
                     .Where(u => u.AnnualMagazineId == queryDto.AnnualMagazineId)
-					.AsQueryable();
+                    .AsQueryable();
 
-				List<Contribution> contributions = query.ToList();
+                List<Contribution> contributions = query.ToList();
 
-				if (queryDto.FacultyId.HasValue)
-				{
-					query = query.Where(a => a.User.FacultyId == queryDto.FacultyId);
-				}
+                if (queryDto.FacultyId.HasValue)
+                {
+                    query = query.Where(a => a.User.FacultyId == queryDto.FacultyId);
+                }
+
+                if (queryDto.UserId.HasValue)
+                {
+                    query = query.Where(a => a.UserId == queryDto.UserId);
+                }
 
                 contributions = query.ToList();
 
-				return contributions;
-			}
+                return contributions;
+            }
             catch (Exception)
             {
                 throw new Exception("Error getting Contribution");
@@ -220,11 +225,13 @@ namespace UniMagContributions.Repositories
             }
         }
 
-        public Contribution IsContributionExist(Guid userId, Guid annualMagazineId)
+        public List<Contribution> GetContributionByMagazineIdAndUserId(Guid userId, Guid annualMagazineId)
         {
             try
             {
-                return _context.Contributions.FirstOrDefault(u => u.UserId == userId && u.AnnualMagazineId == annualMagazineId);
+                return _context.Contributions
+                    .Where(u => u.UserId == userId && u.AnnualMagazineId == annualMagazineId)
+                    .ToList();
             }
             catch (Exception)
             {
