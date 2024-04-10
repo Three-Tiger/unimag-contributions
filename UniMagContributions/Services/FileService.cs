@@ -33,7 +33,7 @@ namespace UniMagContributions.Services
 
                 // Check the allowed extenstions
                 string ext = Path.GetExtension(file.FileName);
-                string[] allowedExtensions = new string[] { ".jpg", ".png", ".jpeg", ".docx" };
+                string[] allowedExtensions = new string[] { ".jpg", ".png", ".jpeg", ".docx", ".doc" };
 
                 if (!allowedExtensions.Contains(ext.ToLower()))
                 {

@@ -15,7 +15,7 @@ namespace UniMagContributions.Services.Interface
 		List<ContributionDto> GetContributionByFilter(FilterDto filterDto);
         List<ContributionDto> GetAllContribution();
 		List<ContributionDto> GetContributionIsPublished(int limit);
-		ContributionDto GetContributionByMagazineIdAndUserId(Guid annualManagazinId, Guid userId);
+		List<ContributionDto> GetContributionByMagazineIdAndUserId(Guid annualManagazinId, Guid userId);
 		List<ContributionDto> GetContributionByUserId(Guid userId);
     }
 }

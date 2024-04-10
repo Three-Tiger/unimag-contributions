@@ -4,5 +4,6 @@
 	{
 		public Guid? FacultyId { get; set; }
 		public Guid AnnualMagazineId { get; set; }
+		public Guid? UserId { get; set; }
 	}
 }
