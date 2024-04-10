@@ -44,5 +44,25 @@ namespace UniMagContributions.Services
             List<Contribution> contributionList = _statisticsRepository.GetTop6Contribution();
             return _mapper.Map<List<ContributionDto>>(contributionList);
         }
-    }
+
+		public Dictionary<string, int> TotalPublicContributionsByFacultyId(Guid facultyId)
+		{
+			return _statisticsRepository.TotalPublicContributionsByFacultyId(facultyId);
+		}
+
+		public Dictionary<string, int> GetNumberOfContributionsWithoutFeedback(Guid annualMagazineId)
+		{
+			return _statisticsRepository.GetNumberOfContributionsWithoutFeedback(annualMagazineId);
+		}
+
+		public Dictionary<string, double> GetPercentageOfContributionsWithFeedback(Guid annualMagazineId)
+		{
+			return _statisticsRepository.GetPercentageOfContributionsWithFeedback(annualMagazineId);
+		}
+
+		public Dictionary<string, double> GetPercentageOfContributionsWithFeedbackAfter14days(Guid annualMagazineId)
+		{
+			return _statisticsRepository.GetPercentageOfContributionsWithFeedbackAfter14days(annualMagazineId);
+		}
+	}
 }

@@ -47,11 +47,40 @@ namespace UniMagContributions.Controllers
             return Ok(numberOfAccountsCreated);
         }
 
-        [HttpGet("top-6")]
+		[HttpGet("number-of-contributions-faculty/{facultyId}")]
+		public IActionResult NumberOfContributionByFacultyId(Guid facultyId)
+		{
+			var numberOfContributionByFacultyId = _statisticsService.TotalPublicContributionsByFacultyId(facultyId);
+			return Ok(numberOfContributionByFacultyId);
+		}
+
+
+		[HttpGet("top-6")]
         public IActionResult GetTop6()
         {
             List<ContributionDto> contributions = _statisticsService.GetTop6Contribution();
             return Ok(contributions);
         }
-    }
+
+		[HttpGet("contribution-without-feedback/{annualMagazineId}")]
+		public IActionResult GetContributionWithoutComment(Guid annualMagazineId)
+		{
+			var contributions = _statisticsService.GetNumberOfContributionsWithoutFeedback(annualMagazineId);
+			return Ok(contributions);
+		}
+
+		[HttpGet("percentage-contribution-feedback/{annualMagazineId}")]
+		public IActionResult GetPercentFeedback(Guid annualMagazineId)
+		{
+			var contributions = _statisticsService.GetPercentageOfContributionsWithFeedback(annualMagazineId);
+			return Ok(contributions);
+		}
+
+		[HttpGet("percentage-contribution-feedback-after-14days/{annualMagazineId}")]
+		public IActionResult Get(Guid annualMagazineId)
+		{
+			var contributions = _statisticsService.GetPercentageOfContributionsWithFeedbackAfter14days(annualMagazineId);
+			return Ok(contributions);
+		}
+	}
 }
