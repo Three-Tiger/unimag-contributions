@@ -133,6 +133,11 @@ namespace UniMagContributions.Services
                 _fileService.DeleteFile(updateUserDto.ProfilePicture);
             }
 
+            if (updateUserDto.ProfilePicture == "null")
+            {
+                user.ProfilePicture = null;
+            }
+
             _userRepository.UpdateUser(user);
 
             return _mapper.Map<UserDto>(user);
@@ -162,6 +167,11 @@ namespace UniMagContributions.Services
                 }
                 user.ProfilePicture = result.Item2;
                 _fileService.DeleteFile(updateUserDto.ProfilePicture);
+            }
+
+            if (updateUserDto.ProfilePicture == "null")
+            {
+                user.ProfilePicture = null;
             }
 
             _userRepository.UpdateUser(user);
