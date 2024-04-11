@@ -96,6 +96,7 @@ namespace UniMagContributions.Repositories
                     .Include(f => f.FileDetails)
                     .Include(a => a.ImageDetails)
                     .Where(u => u.AnnualMagazineId == queryDto.AnnualMagazineId)
+                    .OrderByDescending(c => c.SubmissionDate)
                     .AsQueryable();
 
                 List<Contribution> contributions = query.ToList();
@@ -231,6 +232,7 @@ namespace UniMagContributions.Repositories
             {
                 return _context.Contributions
                     .Where(u => u.UserId == userId && u.AnnualMagazineId == annualMagazineId)
+                    .OrderByDescending(c => c.SubmissionDate)
                     .ToList();
             }
             catch (Exception)
